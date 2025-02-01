@@ -1,0 +1,165 @@
+{% extends 'NavBar.html' %}
+{% load static %} 
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hawk Eye</title>
+        {% block content %}
+        <style>
+            body, html {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-image: url('{% static "images/yahya.jpg" %}');
+                background-size: cover;
+                background-position: left;
+                background-color: #000000;
+                position: relative;
+            }
+            #project-name {
+                display: block;
+                font-size: 48px;
+                font-family: 'Georgia', 'Times New Roman', serif; 
+                font-weight: bold;
+                color:rgb(255, 255, 255);
+                text-decoration: none; 
+                animation: slideDown 2s ease-out forwards;
+                position: absolute; 
+                top: 40px; 
+                left: 20px;
+                padding: 10px 20px;
+                background-color: rgba(0, 0, 0, 0.5);
+                border-radius: 10px;
+            }
+            @keyframes slideDown {
+                0% {
+                    transform: translateY(-100px);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            .container {
+                display: flex;
+                justify-content: flex-start;
+                gap: 20px;
+                width: 90%;
+                margin-left: 250px;
+
+            }
+    
+            .blurred-box {
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                padding: 20px;
+                color: white;
+                text-align: center;
+                width: 250px;
+                opacity: 0; /* تبدأ مخفية */
+                transform: translateY(-100px); /* التحريك لأعلى */
+                animation: slideDown 1.5s ease-out forwards;
+            }
+    
+            .blurred-box:nth-child(2) {
+                animation-delay: 0.3s;
+            }
+    
+            .blurred-box:nth-child(3) {
+                animation-delay: 0.6s;
+            }
+            @keyframes slideDown {
+                0% {
+                    transform: translateY(-100px);
+                    opacity: 0;
+                }
+                100% {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+    
+            .blurred-box img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                margin-bottom: 15px;
+            }
+    
+            .blurred-box a {
+                display: flex;
+                align-items: center;
+                color: white;
+                text-decoration: none;
+                margin: 10px 0;
+                font-size: 1rem;
+            }
+            .blurred-box a img {
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+            }
+    
+            .blurred-box a:hover {
+                color: #36a5be;
+            }
+        </style>
+       
+    </head>
+    <body>
+        <a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a>
+        <div class="container">
+            <!-- First Contact Box -->
+            <div class="blurred-box">
+                <img src="{% static 'images/myphoto1.jpg' %}" alt="Profile 1">
+                <a href="https://wa.me/962788964932" target="_blank">
+                    <img src="{% static 'images/download-whatsapp.jpeg' %}" alt="WhatsApp">0788964932
+                </a>
+                <a href="https://www.instagram.com/yahya10___" target="_blank">
+                    <img src="{% static 'images/download-insta.jpeg' %}" alt="Instagram">yahya10___
+                </a>
+                <a href="www.linkedin.com/in/yahya-abd-alraheem-592321317" target="_blank">
+                    <img src="{% static 'images/download-linkedin.png' %}" alt="LinkedIn">Yahya Abd Alraheem
+                </a>
+            </div>
+    
+            <!-- Second Contact Box -->
+            <div class="blurred-box">
+                <img src="{% static 'images/hodaifalogo.jpg' %}" alt="Profile 2">
+                <a href="https://wa.me/962781598094" target="_blank">
+                    <img src="{% static 'images/download-whatsapp.jpeg' %}" alt="WhatsApp">0781598094
+                </a>
+                <a href="https://www.instagram.com/h.alkhateeb1?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">
+                    <img src="{% static 'images/download-insta.jpeg' %}" alt="Instagram">h.alkhateeb1
+                </a>
+                <a href="http://www.linkedin.com/in/hodaifa-haitham-90056b282" target="_blank">
+                    <img src="{% static 'images/download-linkedin.png' %}" alt="LinkedIn">Hodaifa Haitham
+                </a>
+            </div>
+            <!-- Third Contact Box -->
+            <div class="blurred-box">
+                <img src="{% static 'images/leenlogo.jpg' %}" alt="Profile 3">
+            <a href="https://wa.me/962799286316" target="_blank">
+                <img src="{% static 'images/download-whatsapp.jpeg' %}" alt="WhatsApp">0799286316
+            </a>
+            <a href="https://www.instagram.com/hijazinleen_?igsh=MXdmMDh3MDNhbGJmbQ==" target="_blank">
+                <img src="{% static 'images/download-insta.jpeg' %}" alt="Instagram">hijazinleen_
+            </a>
+            <a  target="_blank">
+                <img src="{% static 'images/download-linkedin.png' %}" alt="LinkedIn">No account
+            </a>
+            </div>
+        </div>
+        {% endblock %}
+    </body>
+</html>
