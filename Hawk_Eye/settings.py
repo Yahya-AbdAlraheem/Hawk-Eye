@@ -77,8 +77,12 @@ WSGI_APPLICATION = 'Hawk_Eye.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'pass_management_db',  # اسم قاعدة البيانات
+        'USER': 'postgres',  # اسم المستخدم
+        'PASSWORD': '5555',  # كلمة المرور
+        'HOST': 'localhost',  # إذا كنت تستخدم قاعدة بيانات محلية
+        'PORT': '5432',  # المنفذ الافتراضي لـ PostgreSQL
     }
 }
 
