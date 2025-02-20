@@ -1,261 +1,72 @@
-from django.db import models
+from django.contrib import admin
+from .models import *
 
-# Create your models here.
-    
-class A(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-   
-class B(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل   
-
-class C(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-    
-class D(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class E(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class F(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class G(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class H(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class I(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class J(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class K(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class L(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class M(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class N(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class O(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class P(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class Q(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class R(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class S(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class T(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class U(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-
-class V(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-    
-class W(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-    
-class X(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل    
-    
-class Y(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل
-   
-class Z(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-########################################################################################################################
-
-class Lowercase_a(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-
-class Lowercase_b(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-
-class Lowercase_c(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل  
-    
-class Lowercase_d(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل    
-
-class Lowercase_e(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-
-class Lowercase_f(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_g(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_h(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_i(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_j(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_k(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_l(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_m(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_n(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_o(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_p(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_q(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_r(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_s(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_t(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_u(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_v(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_w(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_x(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_y(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class Lowercase_z(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-########################################################################################################################
-
-class table_0(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-
-class table_1(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_2(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_3(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_4(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_5(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_6(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_7(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_8(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-    
-class table_9(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
-
-########################################################################################################################
-
-class SomthingElse(models.Model):
-    hash = models.TextField()  # النص المشفر باستخدام Argon2
-    created_at = models.DateTimeField(auto_now_add=True)  # تعيين الوقت تلقائيًا عند إنشاء السجل 
+# Register your models here.
+admin.site.register(A)
+admin.site.register(B)
+admin.site.register(C)
+admin.site.register(D)
+admin.site.register(E)
+admin.site.register(F)
+admin.site.register(G)
+admin.site.register(H)
+admin.site.register(I)
+admin.site.register(J)
+admin.site.register(K)
+admin.site.register(L)
+admin.site.register(M)
+admin.site.register(N)
+admin.site.register(O)
+admin.site.register(P)
+admin.site.register(Q)
+admin.site.register(R)
+admin.site.register(S)
+admin.site.register(T)
+admin.site.register(U)
+admin.site.register(V)
+admin.site.register(W)
+admin.site.register(X)
+admin.site.register(Y)
+admin.site.register(Z)
+###########################
+admin.site.register(Lowercase_a)
+admin.site.register(Lowercase_b)
+admin.site.register(Lowercase_c)
+admin.site.register(Lowercase_d)
+admin.site.register(Lowercase_e)
+admin.site.register(Lowercase_f)
+admin.site.register(Lowercase_g)
+admin.site.register(Lowercase_h)
+admin.site.register(Lowercase_i)
+admin.site.register(Lowercase_j)
+admin.site.register(Lowercase_k)
+admin.site.register(Lowercase_l)
+admin.site.register(Lowercase_m)
+admin.site.register(Lowercase_n)
+admin.site.register(Lowercase_o)
+admin.site.register(Lowercase_p)
+admin.site.register(Lowercase_q)
+admin.site.register(Lowercase_r)
+admin.site.register(Lowercase_s)
+admin.site.register(Lowercase_t)
+admin.site.register(Lowercase_u)
+admin.site.register(Lowercase_v)
+admin.site.register(Lowercase_w)
+admin.site.register(Lowercase_x)
+admin.site.register(Lowercase_y)
+admin.site.register(Lowercase_z)
+###########################
+admin.site.register(table_0)
+admin.site.register(table_1)
+admin.site.register(table_2)
+admin.site.register(table_3)
+admin.site.register(table_4)
+admin.site.register(table_5)
+admin.site.register(table_6)
+admin.site.register(table_7)
+admin.site.register(table_8)
+admin.site.register(table_9)
+############################
+admin.site.register(SomthingElse)
+admin.site.site_header='Database Administrator'
+admin.site.site_title='Hawk Eye'
