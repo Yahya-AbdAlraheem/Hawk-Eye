@@ -1,28 +1,69 @@
-from django.shortcuts import render
-from django.contrib.auth.hashers import make_password, check_password
-from .models import PasswordHash
+import os
+from django.core.management.base import BaseCommand
+from argon2 import PasswordHasher
+from PassManagement.models import *
+import argon2
 
-def check_password_view(request):
-    message = None
-    try:
-        if request.method == "POST":
-            # أخذ كلمة المرور من الطلب
-            password = request.POST.get('password')
+class Command(BaseCommand):
+    help = "Remove duplicate passwords from rockyou.txt and save unique ones."
 
-            # التحقق من إذا كانت كلمة المرور موجودة بالفعل في قاعدة البيانات
-            existing_hashes = PasswordHash.objects.values_list('hash', flat=True)
-            if any(check_password(password, stored_hash) for stored_hash in existing_hashes):
-                message = "Weak password. It's already used."
-            else:
-                # تحويل كلمة المرور إلى تجزئة باستخدام Argon2
-                hashed_password = make_password(password, hasher='argon2')
+    def handle(self, *args, **kwargs):
+        input_file_path = r"C:\Users\user\Downloads\rockyou.txt"  
+        output_file_path = r"C:\Users\user\Downloads\rockyou_no_duplicates.txt"
 
-                # حفظ التجزئة في قاعدة البيانات
-                PasswordHash.objects.create(hash=hashed_password)
-                message = "Strong Password."
+        # عداد الكلمات المخزنة
+        word_counter = 0
 
-    except Exception as e:
-        message = f"An error occurred: {e}"
+        try:
+            if not os.path.exists(input_file_path):
+                self.stderr.write(self.style.ERROR(f"File not found: {input_file_path}"))
+                return
 
-    # عرض الرسالة للمستخدم في الـ template
-    return render(request, 'CreatePassword.html', {'message': message})
+            # قراءة الملف وإزالة التكرارات
+            with open(input_file_path, "r", encoding="latin1") as file:
+                unique_passwords = set(file.read().splitlines())
+
+            # حفظ الكلمات غير المكررة في ملف جديد
+            with open(output_file_path, "w", encoding="latin1") as file:
+                file.write("\n".join(unique_passwords))
+
+            self.stdout.write(self.style.SUCCESS(f"Duplicate passwords removed. File saved to: {output_file_path}"))
+        
+        except Exception as e:
+            self.stderr.write(self.style.ERROR(f"Error: {e}"))
+
+        # مولد الهاشات
+        ph = argon2.PasswordHasher()
+
+        # قراءة الكلمات من الملف
+        with open(output_file_path, "r", encoding="latin1", errors="ignore") as file:
+            for line in file:
+                word = line.strip()
+                if not word:
+                    continue
+
+                first_char = word[0]
+
+                # تحديد الجدول بناءً على أول حرف
+                if first_char.islower():
+                    model_class = globals().get(f"Lowercase_{first_char}")
+                elif first_char.isupper():
+                    model_class = globals().get(f"{first_char}")
+                elif first_char.isdigit():
+                    model_class = globals().get(f"table_{first_char}")
+                else:
+                    model_class = SomthingElse
+
+                if model_class:
+                    try:
+                        hashed_word = ph.hash(word)
+                        model_class.objects.create(hash=hashed_word)
+                        word_counter += 1  # زيادة العداد عند إضافة كلمة جديدة
+                        self.stdout.write(self.style.SUCCESS(f"Inserted word number {word_counter}: {word} into table: {model_class.__name__}"))
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(f"Error inserting word {word} into {model_class.__name__}: {e}"))
+                else:
+                    self.stdout.write(self.style.WARNING(f"⚠️ Table for {word} does not exist, skipping..."))
+
+
+# To Run Code : python manage.py hash_passwords
