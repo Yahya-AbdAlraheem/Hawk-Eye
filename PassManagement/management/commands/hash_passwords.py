@@ -1,55 +1,69 @@
 import os
 from django.core.management.base import BaseCommand
 from argon2 import PasswordHasher
-from PassManagement.models import PasswordHash  
+from PassManagement.models import *
+import argon2
 
 class Command(BaseCommand):
-    help = "Remove duplicate passwords and hash the unique ones from rockyou.txt and store them in the database"
+    help = "Remove duplicate passwords from rockyou.txt and save unique ones."
 
     def handle(self, *args, **kwargs):
-        input_file_path = r"C:\Users\user\Downloads\rockyou.txt"  # المسار الأصلي للملف
-        output_file_path = r"C:\Users\user\Downloads\rockyou_no_duplicates.txt"  # مسار الملف بعد إزالة التكرار
+        input_file_path = r"C:\Users\user\Downloads\rockyou.txt"  
+        output_file_path = r"C:\Users\user\Downloads\rockyou_no_duplicates.txt"
 
-        # خطوة 1: حذف التكرار
+        # عداد الكلمات المخزنة
+        word_counter = 0
+
         try:
-            with open(input_file_path, 'r', encoding='latin-1') as file:
-                passwords = set()  # استخدام set لحذف التكرار
-                for line in file:
-                    password = line.strip()
-                    if password:
-                        passwords.add(password)  # إضافة كلمة المرور إلى المجموعة (حذف التكرار)
+            if not os.path.exists(input_file_path):
+                self.stderr.write(self.style.ERROR(f"File not found: {input_file_path}"))
+                return
 
-            # كتابة الكلمات المصفاة إلى ملف جديد
-            with open(output_file_path, 'w', encoding='latin-1') as file:
-                for password in passwords:
-                    file.write(password + '\n')
+            # قراءة الملف وإزالة التكرارات
+            with open(input_file_path, "r", encoding="latin1") as file:
+                unique_passwords = set(file.read().splitlines())
 
-            self.stdout.write(self.style.SUCCESS(f"Duplicate passwords removed successfully. File saved to {output_file_path}"))
+            # حفظ الكلمات غير المكررة في ملف جديد
+            with open(output_file_path, "w", encoding="latin1") as file:
+                file.write("\n".join(unique_passwords))
 
-        except FileNotFoundError:
-            self.stdout.write(self.style.ERROR(f"File not found: {input_file_path}"))
-        except Exception as e:
-            self.stdout.write(self.style.ERROR(f"Error: {e}"))
-
-        # خطوة 2: تجزئة الكلمات المصفاة
-        ph = PasswordHasher()
-        try:
-            with open(output_file_path, 'r', encoding='latin-1') as file:
-                for line in file:
-                    password = line.strip()
-                    if password:
-                        try:
-                            hashed_password = ph.hash(password)
-                            PasswordHash.objects.create(hash=hashed_password)
-                        except Exception as e:
-                            self.stdout.write(f"Error processing {password}: {e}")
-
-            self.stdout.write(self.style.SUCCESS("Passwords hashed and stored successfully!"))
-
-        except FileNotFoundError:
-            self.stdout.write(self.style.ERROR(f"File not found: {output_file_path}"))
-        except Exception as e:
-            self.stdout.write(self.style.ERROR(f"Error: {e}"))
-
+            self.stdout.write(self.style.SUCCESS(f"Duplicate passwords removed. File saved to: {output_file_path}"))
         
-# To Run Code : python manage.py hash_passwords
+        except Exception as e:
+            self.stderr.write(self.style.ERROR(f"Error: {e}"))
+
+        # مولد الهاشات
+        ph = argon2.PasswordHasher()
+
+        # قراءة الكلمات من الملف
+        with open(output_file_path, "r", encoding="latin1", errors="ignore") as file:
+            for line in file:
+                word = line.strip()
+                if not word:
+                    continue
+
+                first_char = word[0]
+
+                # تحديد الجدول بناءً على أول حرف
+                if first_char.islower():
+                    model_class = globals().get(f"Lowercase_{first_char}")
+                elif first_char.isupper():
+                    model_class = globals().get(f"{first_char}")
+                elif first_char.isdigit():
+                    model_class = globals().get(f"table_{first_char}")
+                else:
+                    model_class = SomthingElse
+
+                if model_class:
+                    try:
+                        hashed_word = ph.hash(word)
+                        model_class.objects.create(hash=hashed_word)
+                        word_counter += 1  # زيادة العداد عند إضافة كلمة جديدة
+                        self.stdout.write(self.style.SUCCESS(f"Inserted word number {word_counter}: {word} into table: {model_class.__name__}"))
+                    except Exception as e:
+                        self.stdout.write(self.style.ERROR(f"Error inserting word {word} into {model_class.__name__}: {e}"))
+                else:
+                    self.stdout.write(self.style.WARNING(f"⚠️ Table for {word} does not exist, skipping..."))
+
+
+# To Run Code : python manage.py hash_passwords
