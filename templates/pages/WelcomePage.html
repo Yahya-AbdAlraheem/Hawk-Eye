@@ -1,4 +1,4 @@
-{% load static %} 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +17,7 @@
             background-image: url('{% static "images/welcomePhoto.jpg" %}');
             background-size: cover;
             background-position: center;
-            background-color: #000000;
+            background-color: rgb(48 48 48 / 92%);
         }
         .title {
             position: absolute;
@@ -28,8 +28,10 @@
             color: #ffffff; 
         }
         .start-button {
-            position: absolute;
-            bottom: 80px;
+            /* position: absolute; */
+            /* bottom: 80px; */
+            position: relative;
+            left:20%;
             font-size: 24px;
             padding: 15px 30px;
             background: linear-gradient(#36a5be , #324456 , #000000 );
@@ -48,10 +50,76 @@
             transform: scale(0.95);
             background: linear-gradient(#8dabc0 , #324456 , #000000 );
         }
+
+
+        .container {
+    text-align: center;
+    color: #F4E49B;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+    margin-bottom:50% ;
+    right: 15%;
+    /* left: 10%; */
+}
+
+.welcome {
+    font-size: 18px;
+    letter-spacing: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10%;
+}
+
+.hawkeye {
+    font-size: 50px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    position: relative;
+}
+
+.line {
+    width: 80px;
+    height: 3px;
+    background-color: #F4E49B;
+    margin: 10px auto;
+    position: relative;
+}
+
+.line::before, .line::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: #F4E49B;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.line::before {
+    left: -15px;
+}
+
+.line::after {
+    right: -15px;
+}
+.main-center{
+        position: absolute;
+        top: 50%;
+        left: 52%;
+        transform: translate(-50%, -50%);
+    }   
     </style>
 </head>
 <body>
-    <div class="title">Hawk Eye</div>
-    <button class="start-button" onclick="window.location.href='{% url 'HomePage' %}'">Get Started</button>
+    <div class="main-center">
+        <div class="container">
+            <!-- <p class="welcome"></p> -->
+            <div class="line"></div>
+            <h1 class="hawkeye">YOU ARE WELCOME</h1>
+            <div class="line"></div>
+        </div>
+    <button class="start-button" onclick="window.location.href=''">Get Started</button>
+    </div>
 </body>
 </html>
