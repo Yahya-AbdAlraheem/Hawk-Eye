@@ -2,5 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('extract-information/', views.DarkWebManagementView.as_view(), name='extract-information'),
+    path('search_in_dark_web/', views.search_darkweb, name='extract-information'),
+     path('results/', views.get_results, name='get_results'),
 ]
