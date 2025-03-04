@@ -1,13 +1,10 @@
-{% extends 'NavBar.html' %}
-{% load static %} 
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Hawk Eye</title>
-        {% block content %}
+        <!-- {% block content %} -->
         <style>
             body, html {
                 margin: 0;
@@ -16,14 +13,21 @@
                 height: 100%;
                 display: flex;
                 justify-content: center;
-                align-items: center;
+                align-items: cenextendster;
                 background-image: url('{% static "images/yahya.jpg" %}');
                 background-size: cover;
                 background-position: left;
-                background-color: #000000;
+                background-color: rgb(48 48 48 / 92%);
+
                 position: relative;
             }
-            .search-box {
+            .main-center{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+            /* .search-box {
                 position: absolute;
                 bottom: 180px;  
                 right: 280px; 
@@ -53,7 +57,7 @@
             }
             .search-box button:hover {
                 background-color: #36a5be;
-            }
+            } */
             #project-name {
                 display: block;
                 font-size: 48px;
@@ -74,16 +78,16 @@
                     transform: translateY(-100px);
                     opacity: 0;
                 }
-                100% {
+                100%{
                     transform: translateY(0);
                     opacity: 1;
                 }
             }
             .caption-container {
-                position: absolute;
-                bottom: 30px;
-                right: 250px;
-                margin: 10px;
+                max-height: 300px;
+                position: relative;
+                /* top: 380px;
+                right: 13%; */
                 padding: 15px;
                 transform: translateX(-50%);
                 border: 2px solid #fff;
@@ -139,19 +143,98 @@
                 background-color: #36a5be;
                 transform: scale(1.05);
             }
+
+
+
+/*  */
+
+        /* body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        } */
+        .container {
+    text-align: center;
+    color: #F4E49B;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+    margin-bottom:50% ;
+    /* left: 10%; */
+}
+
+.welcome {
+    font-size: 18px;
+    letter-spacing: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 10%;
+}
+
+.hawkeye {
+    font-size: 50px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    position: relative;
+}
+
+.line {
+    width: 80px;
+    height: 3px;
+    background-color: #F4E49B;
+    margin: 10px auto;
+    position: relative;
+}
+
+.line::before, .line::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    background-color: #F4E49B;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.line::before {
+    left: -15px;
+}
+
+.line::after {
+    right: -15px;
+}
+
+
+/*  */
+
+
+
         </style>
        
     </head>
     <body>
-        <a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a>
+        <div class="main-center">
+        <div class="container">
+            <p class="welcome">WELCOME TO</p>
+            <div class="line"></div>
+            <h1 class="hawkeye">HAWK EYE</h1>
+            <div class="line"></div>
+        </div>
+        <!-- <a href="{% url 'WelcomePage' %}" id="project-name">HAWK EYE</a> -->
         <div class="caption-container">
             <h2>Hawk Eye Is Ready</h2>
             <form method="post" action="">
-                {% csrf_token %}
+                <!-- {% csrf_token %} -->
                 <input type="text" id="caption" name="caption" class="caption-input" placeholder="Search here ...." required>
                 <button type="submit">Submit</button>
             </form>
         </div>
-        {% endblock %}
+        </div>
+        <!-- {% endblock %} -->
     </body>
 </html>
