@@ -1,6 +1,5 @@
-from functools import cache
 from django.db import models
-from .AES import encrypt, decrypt  # استيراد وظائف التشفير وفك التشفير
+from .AES import encrypt, decrypt
 
 class ExtractedData(models.Model):
     CATEGORY_CHOICES = [
@@ -11,7 +10,8 @@ class ExtractedData(models.Model):
         ('video', 'Video'),
     ]
 
-    content = models.TextField(blank=True, null=True)
+    content = models.TextField(blank=True, null=True)  # العنوان المشفر
+    description = models.TextField(blank=True, null=True)  # الوصف المشفر
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
     first_character = models.CharField(max_length=1, blank=True, null=True)
     second_character = models.CharField(max_length=1, blank=True, null=True)
@@ -22,6 +22,10 @@ class ExtractedData(models.Model):
     image = models.ImageField(upload_to='darkweb_images/', blank=True, null=True)
     video = models.FileField(upload_to='darkweb_videos/', blank=True, null=True)
 
+    h1 = models.TextField(blank=True, null=True)  
+    h2 = models.TextField(blank=True, null=True)  
+    h3 = models.TextField(blank=True, null=True)  
+
     class Meta:
         indexes = [
             models.Index(fields=['first_character', 'second_character']),
@@ -29,33 +33,30 @@ class ExtractedData(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        # تشفير البيانات النصية فقط
         if self.content:
             self.content = encrypt(self.content)
-            self.first_character = self.content[0].upper() if self.content else ''
-            if len(self.content) > 1:
-                self.second_character = self.content[1].upper()
-            if len(self.content) > 2:
-                self.third_character = self.content[2].upper()
-            if len(self.content) > 3:
-                self.fourth_character = self.content[3].upper()
-        
+        if self.description:
+            self.description = encrypt(self.description)
+        if self.h1:
+            self.h1 = encrypt(self.h1)
+        if self.h2:
+            self.h2 = encrypt(self.h2)
+        if self.h3:
+            self.h3 = encrypt(self.h3)
+
         super().save(*args, **kwargs)
 
     def get_decrypted_content(self):
         return decrypt(self.content) if self.content else None
-    
-    @staticmethod
-    def get_cached_data(content):
-        # محاولة جلب البيانات من الكاش
-        cached_data = cache.get(content)
-        
-        if cached_data:
-            return cached_data
-        
-        data = ExtractedData.objects.filter(content=content).first()
-        
-        if data:
-            cache.set(content, data, timeout=60*15)
-        
-        return data
+
+    def get_decrypted_description(self):
+        return decrypt(self.description) if self.description else None
+
+    def get_decrypted_h1(self):
+        return decrypt(self.h1) if self.h1 else None
+
+    def get_decrypted_h2(self):
+        return decrypt(self.h2) if self.h2 else None
+
+    def get_decrypted_h3(self):
+        return decrypt(self.h3) if self.h3 else None
