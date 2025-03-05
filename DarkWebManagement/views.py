@@ -1,89 +1,93 @@
-from django.shortcuts import render
+from django.core.cache import cache
 from django.http import JsonResponse
+from .dark_web_scraper import search_darkweb
 from .models import ExtractedData
 from .AES import encrypt, decrypt
-import subprocess
-import json
-import os
-import shutil
-import requests
-from django.conf import settings
-
-def save_media_files(media_list, media_type):
-    """Helper function to save images and videos to the correct media folder"""
-    media_dir = os.path.join(settings.MEDIA_ROOT, f'darkweb_{media_type}')
-    os.makedirs(media_dir, exist_ok=True)
-    stored_files = []
-    
-    for media_url in media_list:
-        filename = os.path.basename(media_url)
-        file_path = os.path.join(media_dir, filename)
-        
-        try:
-            response = requests.get(media_url, stream=True, timeout=10)
-            response.raise_for_status()
-            
-            with open(file_path, 'wb') as file:
-                shutil.copyfileobj(response.raw, file)
-                stored_files.append(f'darkweb_{media_type}/{filename}')
-        except Exception as e:
-            print(f"Error saving {media_type}: {e}")
-    
-    return stored_files
-
-def search_darkweb(request):
-    if request.method == 'POST':
-        query = request.POST.get('query')
-        
-        if not query:
-            return JsonResponse({'error': 'Search query is required'}, status=400)
-        
-        try:
-            result = subprocess.run(['python3', 'dark_web_scraper.py', query], capture_output=True, text=True)
-            scraped_data = json.loads(result.stdout)  # يفترض أن يكون الناتج JSON
-        except Exception as e:
-            return JsonResponse({'error': f'Failed to run scraper: {str(e)}'}, status=500)
-        
-        for entry in scraped_data:
-            encrypted_title = encrypt(entry['title'])
-            encrypted_description = encrypt(entry['description'])
-            encrypted_url = encrypt(entry['url'])
-            
-            images = save_media_files(entry.get('images', []), 'images')
-            videos = save_media_files(entry.get('videos', []), 'videos')
-            
-            ExtractedData.objects.create(
-                query=query,
-                title=encrypted_title,
-                description=encrypted_description,
-                url=encrypted_url,
-                headings=json.dumps(entry.get('headings', [])),
-                links=json.dumps(entry.get('links', [])),
-                images=json.dumps(images),
-                videos=json.dumps(videos)
-            )
-        
-        return JsonResponse({'message': 'Search completed and data stored successfully'})
-    
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+import string
 
 def get_results(request):
-    query = request.GET.get('query')
+    query = request.GET.get('query', '').strip()
     if not query:
-        return JsonResponse({'error': 'Query parameter is required'}, status=400)
-    
-    results = ExtractedData.objects.filter(query=query)
-    
-    decrypted_results = []
-    for result in results:
-        decrypted_results.append({
-            'title': decrypt(result.title),
-            'description': decrypt(result.description),
-            'url': decrypt(result.url),
-            'headings': json.loads(result.headings),
-            'links': json.loads(result.links),
-            'images': json.loads(result.images),
-            'videos': json.loads(result.videos)
+        return JsonResponse({'error': 'يرجى إدخال كلمة البحث'}, status=400)
+
+    # 🔥 البحث في الكاش أولًا
+    cached_data = cache.get(query)
+    if cached_data:
+        # فك تشفير العناوين، الأوصاف، والهيدرز في الكاش
+        for result in cached_data:
+            result['title'] = decrypt(result['title'])
+            result['description'] = decrypt(result['description'])
+            for key in ['h1', 'h2', 'h3']:  # فك تشفير الهيدرز
+                if result.get(key):
+                    result[key] = decrypt(result[key])
+        return JsonResponse({'source': 'cache', 'results': cached_data})
+
+    # 🔥 حذف البيانات القديمة
+    ExtractedData.objects.all().delete()
+
+    # 🔥 البحث في الدارك ويب
+    raw_results = search_darkweb(query)
+
+    # 🔥 تنظيف البيانات (إزالة التكرار)
+    unique_results = list(set(raw_results))  # حذف المكرر
+
+    # 🔥 تخزين البيانات بعد التشفير
+    stored_results = []
+    for result in unique_results:
+        title = result.get('title', '')
+        description = result.get('description', '')
+        h1 = result.get('h1', '')
+        h2 = result.get('h2', '')
+        h3 = result.get('h3', '')
+        image = result.get('image', '')
+        video = result.get('video', '')
+
+        # تحديد التصنيف بناء على أول حرف
+        first_char = title[0].upper() if title else ''
+        second_char = title[1].upper() if len(title) > 1 else ''
+        third_char = title[2].upper() if len(title) > 2 else ''
+        fourth_char = title[3].upper() if len(title) > 3 else ''
+
+        if first_char.isdigit():
+            category = "number"
+        elif first_char in string.punctuation:
+            category = "symbol"
+        else:
+            category = "letter"
+
+        # تشفير العنوان، الوصف، والهيدرز
+        encrypted_title = encrypt(title)
+        encrypted_description = encrypt(description)
+        encrypted_h1 = encrypt(h1)
+        encrypted_h2 = encrypt(h2)
+        encrypted_h3 = encrypt(h3)
+
+        # حفظ البيانات في قاعدة البيانات
+        ExtractedData.objects.create(
+            content=encrypted_title,
+            description=encrypted_description,
+            category=category,
+            first_character=first_char,
+            second_character=second_char,
+            third_character=third_char,
+            fourth_character=fourth_char,
+            image=image,
+            video=video,
+            h1=encrypted_h1,
+            h2=encrypted_h2,
+            h3=encrypted_h3
+        )
+        stored_results.append({
+            'title': decrypt(encrypted_title),
+            'description': decrypt(encrypted_description),
+            'h1': decrypt(encrypted_h1),
+            'h2': decrypt(encrypted_h2),
+            'h3': decrypt(encrypted_h3),
+            'image': image,
+            'video': video
         })
-    
-    return JsonResponse({'results': decrypted_results})
+
+    # 🔥 تخزين البيانات في الكاش لمدة 10 دقائق
+    cache.set(query, stored_results, timeout=600)
+
+    return JsonResponse({'source': 'darkweb', 'results': stored_results})
