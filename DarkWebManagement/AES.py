@@ -3,22 +3,41 @@ from Crypto.Util.Padding import pad, unpad
 import base64
 import os
 
-# مفتاح AES يجب أن يكون 16 أو 24 أو 32 بايت
-SECRET_KEY = os.urandom(32)  # يمكن أن تغيره لمفتاح ثابت إذا أردت
+# قراءة المفتاح من المتغير البيئي
+SECRET_KEY = os.getenv("AES_SECRET_KEY")
+
+if not SECRET_KEY:
+    raise ValueError("Key Not Found in Environmental Variables!")
+
+SECRET_KEY = SECRET_KEY.encode()  # تحويله إلى bytes
+
+# التحقق من طول المفتاح (يجب أن يكون 16, 24, أو 32 بايت)
+if len(SECRET_KEY) not in [16, 24, 32]:
+    raise ValueError("Invalid Key Length! Must be 16, 24, or 32 bytes.")
 
 # وظيفة لتشفير النص
 def encrypt(data: str) -> str:
     cipher = AES.new(SECRET_KEY, AES.MODE_CBC)
     ct_bytes = cipher.encrypt(pad(data.encode(), AES.block_size))
-    iv = base64.b64encode(cipher.iv).decode('utf-8')  # حفظ ال IV
-    ct = base64.b64encode(ct_bytes).decode('utf-8')  # تشفير النص نفسه
-    return iv + ct  # نرجع الـ IV مع النص المشفر
+    iv = cipher.iv  # الـ IV العشوائي
+    return base64.b64encode(iv + ct_bytes).decode('utf-8')  # تخزين IV مع النص المشفر
 
 # وظيفة لفك تشفير النص
 def decrypt(data: str) -> str:
-    iv = base64.b64decode(data[:24])  # أول 16 حرف تمثل الـ IV
-    ct = base64.b64decode(data[24:])  # باقي النص هو النص المشفر
+    raw_data = base64.b64decode(data)  # فك تشفير Base64
+    iv = raw_data[:16]  # استخراج أول 16 بايت كـ IV
+    ct = raw_data[16:]  # الباقي هو النص المشفر
+    
     cipher = AES.new(SECRET_KEY, AES.MODE_CBC, iv)
     pt = unpad(cipher.decrypt(ct), AES.block_size)
     return pt.decode('utf-8')
 
+
+# اختبار التشفير وفك التشفير
+#if __name__ == "__main__":
+#    text = "Hiii"
+#    encrypted = encrypt(text)
+#    decrypted = decrypt(encrypted)
+#
+#   print(f"🔒 Encrypted: {encrypted}")
+#    print(f"🔓 Decrypted: {decrypted}")
