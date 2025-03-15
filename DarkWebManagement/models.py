@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.cache import cache
 from .AES import encrypt, decrypt
 
 class ExtractedData(models.Model):
@@ -10,8 +11,7 @@ class ExtractedData(models.Model):
         ('video', 'Video'),
     ]
 
-    content = models.TextField(blank=True, null=True)  # العنوان المشفر
-    description = models.TextField(blank=True, null=True)  # الوصف المشفر
+    description = models.TextField(blank=True, null=True)  
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
     first_character = models.CharField(max_length=1, blank=True, null=True)
     second_character = models.CharField(max_length=1, blank=True, null=True)
@@ -22,9 +22,12 @@ class ExtractedData(models.Model):
     image = models.ImageField(upload_to='darkweb_images/', blank=True, null=True)
     video = models.FileField(upload_to='darkweb_videos/', blank=True, null=True)
 
-    h1 = models.TextField(blank=True, null=True)  
-    h2 = models.TextField(blank=True, null=True)  
-    h3 = models.TextField(blank=True, null=True)  
+    title_1 = models.TextField(blank=True, null=True)  # عنوان H1
+    title_2 = models.TextField(blank=True, null=True)  # عنوان H2
+    title_3 = models.TextField(blank=True, null=True)  # عنوان H3
+
+    url = models.URLField(max_length=200, blank=True, null=True)  # الرابط الذي تم البحث فيه
+    query = models.CharField(max_length=255, blank=True, null=True)  # الكلمة المفتاحية للبحث
 
     class Meta:
         indexes = [
@@ -32,31 +35,60 @@ class ExtractedData(models.Model):
             models.Index(fields=['third_character', 'fourth_character']),
         ]
 
-    def save(self, *args, **kwargs):
-        if self.content:
-            self.content = encrypt(self.content)
-        if self.description:
-            self.description = encrypt(self.description)
-        if self.h1:
-            self.h1 = encrypt(self.h1)
-        if self.h2:
-            self.h2 = encrypt(self.h2)
-        if self.h3:
-            self.h3 = encrypt(self.h3)
+def save(self, *args, **kwargs):
+    """حفظ البيانات في الكاش أولًا، ثم التحقق من التكرار قبل الحفظ في الموديل"""
 
-        super().save(*args, **kwargs)
+    if not self.query:
+        return  # لا داعي للحفظ إذا لم يكن هناك استعلام
 
-    def get_decrypted_content(self):
-        return decrypt(self.content) if self.content else None
+    # إنشاء نسخة غير مشفرة من البيانات للكاش
+    raw_data = {
+        'title_1': self.title_1,
+        'title_2': self.title_2,
+        'title_3': self.title_3,
+        'description': self.description,
+        'image': self.image.url if self.image else None,
+        'video': self.video.url if self.video else None,
+        'url': self.url
+    }
+
+    cache_key = f"query:{self.query.lower()}"
+    cached_data = cache.get(cache_key, set())
+
+    # التحقق من التكرار قبل الحفظ في الكاش
+    if str(raw_data) not in cached_data:
+        cached_data.add(str(raw_data))
+        cache.set(cache_key, cached_data, timeout=600)
+
+    # التحقق من التكرار قبل الحفظ في قاعدة البيانات
+    duplicate = ExtractedData.objects.filter(
+        title_1=encrypt(self.title_1) if self.title_1 else None,
+        title_2=encrypt(self.title_2) if self.title_2 else None,
+        title_3=encrypt(self.title_3) if self.title_3 else None,
+        description=encrypt(self.description) if self.description else None,
+        url=self.url
+    ).exists()
+
+    if duplicate:
+        return  # إلغاء الحفظ
+
+    # تشفير البيانات قبل الحفظ في قاعدة البيانات
+    self.title_1 = encrypt(self.title_1) if self.title_1 else None
+    self.title_2 = encrypt(self.title_2) if self.title_2 else None
+    self.title_3 = encrypt(self.title_3) if self.title_3 else None
+    self.description = encrypt(self.description) if self.description else None
+
+    super().save(*args, **kwargs)
+
+
+    def get_decrypted_title_1(self):
+        return decrypt(self.title_1) if self.title_1 else None
+
+    def get_decrypted_title_2(self):
+        return decrypt(self.title_2) if self.title_2 else None
+
+    def get_decrypted_title_3(self):
+        return decrypt(self.title_3) if self.title_3 else None
 
     def get_decrypted_description(self):
         return decrypt(self.description) if self.description else None
-
-    def get_decrypted_h1(self):
-        return decrypt(self.h1) if self.h1 else None
-
-    def get_decrypted_h2(self):
-        return decrypt(self.h2) if self.h2 else None
-
-    def get_decrypted_h3(self):
-        return decrypt(self.h3) if self.h3 else None
