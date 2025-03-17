@@ -20,14 +20,11 @@ class CheckPasswordView(View):
         elif first_char.isdigit():
             model_class = globals().get(f"table_{first_char}")
         else:
-            model_class = None
+            model_class = SomthingElse
 
         try:
             if not model_class:
                 return JsonResponse({"status": "error", "message": "Invalid table selection"}, status=400)
-
-            # استخدام passlib.hash.argon2 للـ hashing
-            hashed_password = argon2.hash(password)
 
             # مقارنة التجزئة بدون الـ Salt
             stored_hashes = model_class.objects.values_list("hash", flat=True)
