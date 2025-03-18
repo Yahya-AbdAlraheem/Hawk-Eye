@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
-from passlib.hash import argon2
+import hashlib
 from .models import *
-from concurrent.futures import ThreadPoolExecutor
 
 class CheckPasswordView(View):
     def post(self, request):
@@ -28,20 +27,16 @@ class CheckPasswordView(View):
 
             # مقارنة التجزئة بدون الـ Salt
             stored_hashes = model_class.objects.values_list("hash", flat=True)
-            stored_hashes = set(stored_hashes)
+            stored_hashes = set(stored_hashes)  # تحويل القيم إلى مجموعة لتسريع الفحص
 
-            # استخدم ThreadPoolExecutor لتوزيع العمل بين عدة خيوط
-            def check_hash(stored_hash):
-                return argon2.verify(password, stored_hash)
+            # تحويل الـ password إلى SHA-512
+            hashed_password = hashlib.sha512(password.encode()).hexdigest()
 
-            with ThreadPoolExecutor() as executor:
-                results = list(executor.map(check_hash, stored_hashes))
-
-            # إذا كان أحد الـ hashes متطابق، أعد الجواب
-            if any(results):
+            # استخدام set للمقارنة بين الهاشات
+            if hashed_password in stored_hashes:
                 return JsonResponse({"status": "weak", "message": "Weak password! Already exists."})
 
             return JsonResponse({"status": "strong", "message": "Strong password! Not found in database."})
 
         except Exception as e:
-            return JsonResponse({"⚠️status": "error", "message": str(e)}, status=500)
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
