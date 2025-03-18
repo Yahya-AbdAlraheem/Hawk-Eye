@@ -1,8 +1,7 @@
 import os
+import hashlib
 from django.core.management.base import BaseCommand
-from argon2 import PasswordHasher
 from PassManagement.models import *
-import argon2
 
 class Command(BaseCommand):
     help = "Remove duplicate passwords from rockyou.txt and save unique ones."
@@ -19,7 +18,7 @@ class Command(BaseCommand):
                 self.stderr.write(self.style.ERROR(f"File not found: {input_file_path}"))
                 return
 
-            # قراءة الملف وإزالة التكرارات
+            # قراءة الملف وإزالة التكرارات
             with open(input_file_path, "r", encoding="latin1") as file:
                 unique_passwords = set(file.read().splitlines())
 
@@ -32,9 +31,6 @@ class Command(BaseCommand):
         except Exception as e:
             self.stderr.write(self.style.ERROR(f"Error: {e}"))
 
-        # مولد الهاشات
-        ph = argon2.PasswordHasher()
-
         # قراءة الكلمات من الملف
         with open(output_file_path, "r", encoding="latin1", errors="ignore") as file:
             for line in file:
@@ -44,7 +40,7 @@ class Command(BaseCommand):
 
                 first_char = word[0]
 
-                # تحديد الجدول بناءً على أول حرف
+                # تحديد الجدول بناءً على أول حرف
                 if first_char.islower():
                     model_class = globals().get(f"Lowercase_{first_char}")
                 elif first_char.isupper():
@@ -56,14 +52,13 @@ class Command(BaseCommand):
 
                 if model_class:
                     try:
-                        hashed_word = ph.hash(word)
+                        hashed_word = hashlib.sha512(word.encode()).hexdigest()
                         model_class.objects.create(hash=hashed_word)
-                        word_counter += 1  # زيادة العداد عند إضافة كلمة جديدة
+                        word_counter += 1  # زيادة العداد عند إضافة كلمة جديدة
                         self.stdout.write(self.style.SUCCESS(f"Inserted word number {word_counter}: {word} into table: {model_class.__name__}"))
                     except Exception as e:
                         self.stdout.write(self.style.ERROR(f"Error inserting word {word} into {model_class.__name__}: {e}"))
                 else:
-                    self.stdout.write(self.style.WARNING(f"⚠️ Table for {word} does not exist, skipping..."))
-
+                    self.stdout.write(self.style.WARNING(f"⚠ Table for {word} does not exist, skipping..."))
 
 # To Run Code : python manage.py hash_passwords
