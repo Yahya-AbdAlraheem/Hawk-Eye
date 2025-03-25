@@ -34,52 +34,50 @@ class ExtractedData(models.Model):
             models.Index(fields=['first_character', 'second_character']),
             models.Index(fields=['third_character', 'fourth_character']),
         ]
+    
+    def save(self, *args, **kwargs):
+        # حفظ البيانات في الكاش أولًا، ثم التحقق من التكرار قبل الحفظ في الموديل   
+        if not self.query:
+            return  
 
-def save(self, *args, **kwargs):
-    """حفظ البيانات في الكاش أولًا، ثم التحقق من التكرار قبل الحفظ في الموديل"""
+        # إنشاء نسخة غير مشفرة من البيانات للكاش
+        raw_data = {
+            'title_1': self.title_1,
+            'title_2': self.title_2,
+            'title_3': self.title_3,
+            'description': self.description,
+            'image': self.image.url if self.image else None,
+            'video': self.video.url if self.video else None,
+            'url': self.url
+        }
 
-    if not self.query:
-        return  # لا داعي للحفظ إذا لم يكن هناك استعلام
+        cache_key = f"query:{self.query.lower()}"
+        cached_data = cache.get(cache_key, set())
 
-    # إنشاء نسخة غير مشفرة من البيانات للكاش
-    raw_data = {
-        'title_1': self.title_1,
-        'title_2': self.title_2,
-        'title_3': self.title_3,
-        'description': self.description,
-        'image': self.image.url if self.image else None,
-        'video': self.video.url if self.video else None,
-        'url': self.url
-    }
+        # التحقق من التكرار قبل الحفظ في الكاش
+        if str(raw_data) not in cached_data:
+            cached_data.add(str(raw_data))
+            cache.set(cache_key, cached_data, timeout=600)
 
-    cache_key = f"query:{self.query.lower()}"
-    cached_data = cache.get(cache_key, set())
+        # التحقق من التكرار قبل الحفظ في قاعدة البيانات
+        duplicate = ExtractedData.objects.filter(
+            title_1=encrypt(self.title_1) if self.title_1 else None,
+            title_2=encrypt(self.title_2) if self.title_2 else None,
+            title_3=encrypt(self.title_3) if self.title_3 else None,
+            description=encrypt(self.description) if self.description else None,
+            url=self.url
+        ).exists()
 
-    # التحقق من التكرار قبل الحفظ في الكاش
-    if str(raw_data) not in cached_data:
-        cached_data.add(str(raw_data))
-        cache.set(cache_key, cached_data, timeout=600)
+        if duplicate:
+            return  
 
-    # التحقق من التكرار قبل الحفظ في قاعدة البيانات
-    duplicate = ExtractedData.objects.filter(
-        title_1=encrypt(self.title_1) if self.title_1 else None,
-        title_2=encrypt(self.title_2) if self.title_2 else None,
-        title_3=encrypt(self.title_3) if self.title_3 else None,
-        description=encrypt(self.description) if self.description else None,
-        url=self.url
-    ).exists()
+        # تشفير البيانات قبل الحفظ في قاعدة البيانات
+        self.title_1 = encrypt(self.title_1) if self.title_1 else None
+        self.title_2 = encrypt(self.title_2) if self.title_2 else None
+        self.title_3 = encrypt(self.title_3) if self.title_3 else None
+        self.description = encrypt(self.description) if self.description else None
 
-    if duplicate:
-        return  # إلغاء الحفظ
-
-    # تشفير البيانات قبل الحفظ في قاعدة البيانات
-    self.title_1 = encrypt(self.title_1) if self.title_1 else None
-    self.title_2 = encrypt(self.title_2) if self.title_2 else None
-    self.title_3 = encrypt(self.title_3) if self.title_3 else None
-    self.description = encrypt(self.description) if self.description else None
-
-    super().save(*args, **kwargs)
-
+        super().save(*args, **kwargs)
 
     def get_decrypted_title_1(self):
         return decrypt(self.title_1) if self.title_1 else None
