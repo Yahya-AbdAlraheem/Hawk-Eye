@@ -116,6 +116,8 @@ STATICFILES_DIRS = [
 # Media files (images & videos from Dark Web)
 MEDIA_URL = '/media/'  # الرابط اللي رح تستخدمه للوصول للملفات
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # المكان اللي يتم تخزين الملفات فيه
+DARKWEB_IMAGES = os.path.join(MEDIA_ROOT, 'darkweb_images')
+DARKWEB_VIDEOS = os.path.join(MEDIA_ROOT, 'darkweb_videos')
 
 
 # Default primary key field type
