@@ -1,0 +1,82 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #121212;
+        color: #f1f1f1;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 2rem;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background-color: #1e1e1e;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 10px #000;
+    }
+    h2 {
+        color: #00ffc3;
+    }
+    .error {
+        color: red;
+    }
+    .result-box {
+        margin-top: 1rem;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+    th, td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #333;
+        text-align: left;
+    }
+    th {
+        color: #00ffc3;
+    }
+</style>
+
+<div class="container">
+    <h2>فحص الرابط عبر VirusTotal</h2>
+
+    <form method="get">
+        <input type="text" name="url" placeholder="أدخل الرابط" style="width: 70%; padding: 0.5rem;" required>
+        <button type="submit" style="padding: 0.5rem;">فحص</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+        <div class="result-box">
+            <h3>تفاصيل الرابط:</h3>
+            <p><strong>الرابط:</strong> {{ url }}</p>
+            <p><strong>الحالة:</strong> {{ result.data.attributes.last_analysis_stats }}</p>
+
+            <h4>تحليلات بعض المحركات:</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>محرك الفحص</th>
+                        <th>النتيجة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for engine, analysis in result.data.attributes.last_analysis_results.items %}
+                        <tr>
+                            <td>{{ engine }}</td>
+                            <td>{{ analysis.result|default:"Clean" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
