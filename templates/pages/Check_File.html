@@ -1,0 +1,264 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #121212;
+        color: #f1f1f1;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 2rem;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+    }
+    .container {
+        width: 100%;
+        max-width: 900px;
+        background-color: #1e1e1e;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+    h2 {
+        color: #00ffc3;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    .section-box h3 {
+        color: #00ffc3;
+    }
+    .error {
+        color: red;
+        text-align: center;
+        margin-top: 1rem;
+    }
+    .section-box {
+        margin-top: 2rem;
+        background-color: #292929;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .info-box {
+        background-color: #333;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+    .info-box strong {
+        color: #00ffc3;
+    }
+
+    .malicious-value {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .harmless-value {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .undetected-value {
+        color: #ffc107;
+        font-weight: bold;
+    }
+
+    .status-grid {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+    .status-box {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        min-width: 100px;
+    }
+    .malicious-box {
+        background-color: #dc3545;
+        color: white;
+    }
+    .harmless-box {
+        background-color: #28a745;
+        color: white;
+    }
+    .undetected-box {
+        background-color: #ffc107;
+        color: black;
+    }
+    .clean {
+        color: white;
+        font-weight: bold;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+    th, td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #444;
+        text-align: left;
+    }
+    th {
+        color: #00ffc3;
+    }
+    .malicious-box {
+        background-color: #dc3545;
+        color: white;
+    }
+    .undetected-box {
+        background-color: #28a745;
+        color: white;
+    }
+    .harmless-box {
+        background-color: #3498db;
+        color: white;
+    }    
+
+    .form-container {
+        margin-top: 2rem;
+        text-align: center;
+    }
+    .form-container input[type="file"] {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background-color: #444;
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1.1rem;
+    }
+    .form-container button {
+        padding: 1rem 2rem;
+        background-color: #00ffc3;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        color: #121212;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .form-container button:hover {
+        background-color: #00e0a1;
+    }
+</style>
+
+<div class="container">
+    <h2>File Scan via VirusTotal</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-container">
+            <input type="file" name="file" required>
+            <button type="submit">Scan</button>
+        </div>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if result %}
+        <!-- File Details -->
+        <div class="section-box">
+            <h3>File Details:</h3>
+            <div class="info-box"><strong>File Name:</strong> {{ file }}</div>
+            <div class="info-box"><strong>File Type:</strong> {{ result.data.attributes.type_description|default:"Unknown" }}</div>
+            <div class="info-box"><strong>File Size:</strong> {{ result.data.attributes.size|default:"Not Available" }} bytes</div>
+            <div class="info-box"><strong>SHA256:</strong> {{ result.data.attributes.sha256 }}</div>
+            <div class="info-box"><strong>MD5:</strong> {{ result.data.attributes.md5 }}</div>
+            <div class="info-box"><strong>Scan Date:</strong> {{ scan_time|default:"N/A" }}</div>
+        </div>
+
+        <!-- Scan Status -->
+        <div class="section-box">
+            <h3>Scan Status:</h3>
+            {% with result.data.attributes.last_analysis_stats as stats %}
+            <div class="status-grid">
+                <div class="status-box malicious-box">Malicious: {{ stats.malicious }}</div>
+                <div class="status-box undetected-box">Undetected: {{ stats.undetected }}</div>
+                <div class="status-box harmless-box">Harmless: {{ stats.harmless }}</div>
+            </div>
+            {% endwith %}
+        </div>
+
+
+        <!-- Risk Level -->
+        <div class="section-box">
+            <h3>Risk Level:</h3>
+            <div class="info-box">
+                <strong>Status:</strong>
+                <span style="display: inline-flex; align-items: center;">
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+                        background-color: 
+                            {% if risk_class == 'harmless' %}#28a745
+                            {% elif risk_class == 'medium-risk' %}#ffc107
+                            {% else %}#dc3545{% endif %};
+                        margin-right: 8px;">
+                    </span>
+                    (<span class="{% if risk_class == 'harmless' %}harmless-value
+                                {% elif risk_class == 'medium-risk' %}undetected-value
+                                {% else %}malicious-value{% endif %}">
+                        {{ risk_value }}
+                    </span>)
+                </span>
+            </div>
+        </div>
+
+        <!-- Engine Results -->
+        <div class="section-box">
+            <h3>Engine Results:</h3>
+            <div class="info-box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="color: #00ffc3;">Engine</th>
+                            <th style="color: #00ffc3;">Result</th>
+                            <th style="color: #00ffc3;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for engine, analysis in result.data.attributes.last_analysis_results.items %}
+                            <tr>
+                                <td>{{ engine }}</td>
+                                
+                                <!-- Result Column -->
+                                <td class="{% if analysis.result == 'malicious' %}malicious
+                                            {% elif analysis.result == 'harmless' %}harmless
+                                            {% elif analysis.result == None %}clean
+                                            {% else %}undetected{% endif %}">
+                                    {% if analysis.result %}
+                                        {{ analysis.result|capfirst }}
+                                    {% else %}
+                                        <span style="color: white;">Clean</span>
+                                    {% endif %}
+                                </td>
+                                
+                                <!-- Status Column with colors -->
+                                <td style="font-weight: normal; 
+                                    color: {% if analysis.category == 'undetected' %}#28a745
+                                        {% elif analysis.category == 'malicious' %}#dc3545
+                                        {% elif analysis.category == 'harmless' %}#00bfff
+                                        {% elif analysis.category == 'failure' or analysis.category == 'type-unsupported' %}#fff
+                                        {% else %}#fff{% endif %};">
+                                    {{ analysis.category|default:"-"|capfirst }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% endif %}
+</div>
+{% endblock %}
