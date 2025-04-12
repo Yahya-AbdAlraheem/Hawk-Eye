@@ -9,44 +9,222 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         padding: 2rem;
     }
+
     .container {
-        max-width: 800px;
-        margin: auto;
+        width: 100%;
+        max-width: 900px;
         background-color: #1e1e1e;
         padding: 2rem;
         border-radius: 12px;
-        box-shadow: 0 0 10px #000;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+        margin: 0 auto;
     }
+
     h2 {
         color: #00ffc3;
+        text-align: center;
+        margin-bottom: 1rem;
     }
+
     .error {
         color: red;
-    }
-    .result-box {
+        text-align: center;
         margin-top: 1rem;
     }
+
+    .result-box {
+        margin-top: 2rem;
+        background-color: #292929;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .result-box h3 {
+        color: #00ffc3;
+        margin-bottom: 1rem;
+    }
+
+    .result-box p {
+        font-size: 1rem;
+        color: #d3d3d3;
+        margin-bottom: 0.5rem;
+    }
+
+    .result-box p strong {
+        color: #00ffc3;
+    }
+
+    .info-box {
+        background-color: #333;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+
+    .info-box strong {
+        color: #00ffc3;
+    }
+
+    .status-inline {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .mini-box {
+        flex: 1;
+        min-width: 100px;
+        padding: 0.5rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .mini-box.malicious {
+        background-color: #e74c3c;
+    }
+
+    .mini-box.suspicious {
+        background-color: #f39c12;
+    }
+
+    .mini-box.undetected {
+        background-color: #2ecc71;
+    }
+
+    .mini-box.harmless {
+        background-color: #3498db;
+    }
+
+    .form-container {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .form-container input[type="text"] {
+        width: 70%;
+        padding: 1rem;
+        background-color: #444;
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1.1rem;
+    }
+
+    .form-container button {
+        padding: 1rem 2rem;
+        background-color: #00ffc3;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        color: #121212;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #00e0a1;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 1rem;
     }
+
     th, td {
         padding: 0.75rem;
-        border-bottom: 1px solid #333;
+        border-bottom: 1px solid #444;
         text-align: left;
     }
+
     th {
         color: #00ffc3;
+    }
+
+    .analysis-results-box {
+        background-color: #333;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .long-box {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .long-box .result-column {
+        flex: 1;
+        background-color: #292929;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Style for changing text color based on engine result */
+    .result-status {
+        font-weight: bold;
+    }
+
+    .result-status.malicious {
+        color: #e74c3c;
+    }
+
+    .result-status.suspicious {
+        color: #f39c12;
+    }
+
+    .result-status.undetected {
+        color: #2ecc71;
+    }
+
+    .result-status.harmless {
+        color: #3498db;
+    }
+
+    /* Styling for Risk Level */
+    .section-box {
+        background-color: #292929;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        margin-top: 2rem;
+    }
+
+    .section-box h3 {
+        color: #00ffc3;
+        margin-bottom: 1rem;
+    }
+
+    .harmless-value {
+        color: #28a745;
+    }
+
+    .medium-risk-value {
+        color: #ffc107;
+    }
+
+    .malicious-value {
+        color: #dc3545;
     }
 </style>
 
 <div class="container">
-    <h2>فحص الرابط عبر VirusTotal</h2>
+    <h2>URL Scan via VirusTotal</h2>
 
     <form method="get">
-        <input type="text" name="url" placeholder="أدخل الرابط" style="width: 70%; padding: 0.5rem;" required>
-        <button type="submit" style="padding: 0.5rem;">فحص</button>
+        <div class="form-container">
+            <input type="text" name="url" placeholder="Enter URL" required>
+            <button type="submit">Scan</button>
+        </div>
     </form>
 
     {% if error %}
@@ -55,27 +233,78 @@
 
     {% if result %}
         <div class="result-box">
-            <h3>تفاصيل الرابط:</h3>
-            <p><strong>الرابط:</strong> {{ url }}</p>
-            <p><strong>الحالة:</strong> {{ result.data.attributes.last_analysis_stats }}</p>
+            <h3>URL Details:</h3>
+            <div class="info-box"><strong>URL:</strong> {{ url }}</div>
+            <div class="info-box"><strong>Scan Date:</strong> {{ scan_date }}</div>
 
-            <h4>تحليلات بعض المحركات:</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>محرك الفحص</th>
-                        <th>النتيجة</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for engine, analysis in result.data.attributes.last_analysis_results.items %}
+            <div class="info-box">
+                <strong>Scan Status:</strong>
+                <div class="status-inline">
+                    <div class="mini-box malicious">
+                        Malicious<br>{{ result.data.attributes.last_analysis_stats.malicious }}
+                    </div>
+                    <div class="mini-box suspicious">
+                        Suspicious<br>{{ result.data.attributes.last_analysis_stats.suspicious }}
+                    </div>
+                    <div class="mini-box undetected">
+                        Undetected<br>{{ result.data.attributes.last_analysis_stats.undetected }}
+                    </div>
+                    <div class="mini-box harmless">
+                        Harmless<br>{{ result.data.attributes.last_analysis_stats.harmless }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Level Section -->
+            <div class="section-box">
+                <h3>Risk Level:</h3>
+                <div class="info-box">
+                    <strong>Status:</strong>
+                    <span style="display: inline-flex; align-items: center;">
+                        <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+                            background-color: 
+                                {% if risk_class == 'harmless' %}#28a745
+                                {% elif risk_class == 'medium-risk' %}#ffc107
+                                {% else %}#dc3545{% endif %};
+                            margin-right: 8px;">
+                        </span>
+                        (<span class="{% if risk_class == 'harmless' %}harmless-value
+                                    {% elif risk_class == 'medium-risk' %}medium-risk-value
+                                    {% else %}malicious-value{% endif %}">
+                            {{ risk_value }}%
+                        </span>)
+                    </span>
+                </div>
+            </div>
+
+            <!-- Engine Results Box -->
+            <div class="analysis-results-box">
+                <h3>Engine Results:</h3>
+                <table>
+                    <thead>
                         <tr>
-                            <td>{{ engine }}</td>
-                            <td>{{ analysis.result|default:"Clean" }}</td>
+                            <th>Engine</th>
+                            <th>Status</th>
+                            <th>Result</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for engine, result in result.data.attributes.last_analysis_results.items %}
+                            <tr>
+                                <td>{{ engine }}</td>
+                                <td class="result-status 
+                                    {% if result.category == 'malicious' %}malicious
+                                    {% elif result.category == 'suspicious' %}suspicious
+                                    {% elif result.category == 'undetected' %}undetected
+                                    {% else %}harmless{% endif %}">
+                                    {{ result.category|capfirst }}
+                                </td>
+                                <td>{{ result.result|default:"No result available"|capfirst }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>                    
+                </table>
+            </div>
         </div>
     {% endif %}
 </div>
