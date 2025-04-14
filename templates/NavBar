@@ -7,95 +7,61 @@
     <style>
         nav {
             background-color: rgba(0, 0, 0, 0.5);
-            padding: 10px;
+            padding: 10px 20px;
             display: flex;
-            flex-direction: column;  
+            flex-direction: row;  /* Changed from column to row */
+            justify-content: center; /* Center links */
             position: fixed;
             top: 0;
-            right: 0; 
-            height: 100%; 
-            width: 200px; 
+            left: 0;
+            width: 100%; 
             z-index: 1000;
             backdrop-filter: blur(10px);
         }
+
         nav a {
             color: white;
-            padding: 14px 20px;
+            padding: 12px 20px;
             text-decoration: none;
-            font-size: 20px;
-            display: block; 
-            
+            font-size: 18px;
+            transition: all 0.3s ease;
         }
+
         nav a:hover {
-            background-color: rgba(255, 255, 255, 0.3); /* لون أبيض شفاف */
-            color: black; /* النص بلون غامق */
-            font-weight: bold; /* خط عريض */
-            backdrop-filter: blur(8px); /* تأثير البلور */
-            border-radius: 8px; /* زوايا دائرية لجمالية أكثر */
-            padding: 12px 18px; /* تعديل الحواف لإبراز التصميم */
+            background-color: rgba(255, 255, 255, 0.3);
+            color: black;
+            font-weight: bold;
+            border-radius: 8px;
         }
+
+        nav a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: black;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            margin-right: 220px;
-        }
-        nav a.active {
-            background-color: rgba(255, 255, 255, 0.3); /* لون أبيض شفاف */
-            color: black; /* النص بلون غامق */
-            font-weight: bold; /* خط عريض */
-            backdrop-filter: blur(8px); /* تأثير البلور */
-            border-radius: 8px; /* زوايا دائرية لجمالية أكثر */
-            padding: 12px 18px; /* تعديل الحواف لإبراز التصميم */
+            margin-top: 70px; /* Give space for the fixed navbar */
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav>
-        
-        <a href="{% url 'HomePage' %}" class="{% if request.resolver_match.url_name == 'HomePage' %}active{% endif %}">Home</a>
-        <a href="{% url 'CreatePassword' %}" class="{% if request.resolver_match.url_name == 'CreatePassword' %}active{% endif %}">Check Password</a>
-        <a href="{% url 'whois_lookup' %}" class="{% if request.resolver_match.url_name == 'whois_lookup' %}active{% endif %}">Whois Lookup</a>
-        <a href="{% url 'AboutUs' %}" class="{% if request.resolver_match.url_name == 'AboutUs' %}active{% endif %}">About Us</a>
-        <a href="{% url 'Contact' %}" class="{% if request.resolver_match.url_name == 'Contact' %}active{% endif %}">Contact</a>
-        <a href="{% url 'admin:index' %}" class="{% if request.resolver_match.url_name == 'admin:index' %}active{% endif %}">Admin</a>
-    </nav>
-    <script>
-        // جميع الروابط في الـ Navbar
-        const navLinks = document.querySelectorAll('nav a');
-    
-        navLinks.forEach(link => {
-            link.addEventListener('mouseenter', () => {
-                // عند تمرير الماوس، أزل الكلاس "active" من كل الروابط
-                navLinks.forEach(nav => nav.classList.remove('active'));
-            });
-    
-            link.addEventListener('mouseleave', () => {
-                // عند مغادرة الماوس، أعد الكلاس "active" للرابط الحالي
-                const currentUrl = window.location.pathname;
-                navLinks.forEach(nav => {
-                    if (nav.getAttribute('href') === currentUrl) {
-                        nav.classList.add('active');
-                    }
-                });
-            });
-        });
-    
-        // إضافة الكلاس "active" عند تحميل الصفحة للرابط النشط
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentUrl = window.location.pathname;
-            navLinks.forEach(nav => {
-                if (nav.getAttribute('href') === currentUrl) {
-                    nav.classList.add('active');
-                }
-            });
-        });
-    </script>
-    
+<!-- Top Navbar -->
+<nav>
+    <a href="{% url 'HomePage' %}" class="{% if request.resolver_match.url_name == 'HomePage' %}active{% endif %}">Home</a>
+    <a href="{% url 'CreatePassword' %}" class="{% if request.resolver_match.url_name == 'CreatePassword' %}active{% endif %}">Check Password</a>
+    <a href="{% url 'whois_lookup' %}" class="{% if request.resolver_match.url_name == 'whois_lookup' %}active{% endif %}">Whois Lookup</a>
+    <a href="{% url 'AboutUs' %}" class="{% if request.resolver_match.url_name == 'AboutUs' %}active{% endif %}">About Us</a>
+    <a href="{% url 'Contact' %}" class="{% if request.resolver_match.url_name == 'Contact' %}active{% endif %}">Contact</a>
+    <a href="{% url 'admin:index' %}" class="{% if request.resolver_match.url_name == 'admin:index' %}active{% endif %}">Admin</a>
+</nav>
 
-    <!-- المحتوى المتغير -->
-    {% block content %}
-    {% endblock %}
+<!-- Page Content -->
+{% block content %}
+{% endblock %}
 
 </body>
 </html>

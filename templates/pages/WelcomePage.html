@@ -1,5 +1,70 @@
 {% load static %}
 <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawk Eye</title>
+    <style>
+        nav {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: row;  /* Changed from column to row */
+            justify-content: center; /* Center links */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%; 
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        nav a {
+            color: white;
+            padding: 12px 20px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: black;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        nav a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: black;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin-top: 70px; /* Give space for the fixed navbar */
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div style="display: flex; align-items: center;">
+        <img src="{% static 'images/' %}" alt="Hawk Logo" style="height: 40px; margin-right: 20px;">
+    </div>
+    <a href="{% url 'HomePage' %}">Home</a>
+    <a href="{% url 'CreatePassword' %}">Check Password</a>
+    <a href="{% url 'whois_lookup' %}">Whois Lookup</a>
+    <a href="{% url 'AboutUs' %}">About Us</a>
+    <a href="{% url 'Contact' %}">Contact</a>
+    <a href="{% url 'admin:index' %}">Admin</a>
+</nav>
+
+<!-- Page Content -->
+{% block content %}
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -68,7 +133,6 @@
 </head>
 <body>
     <div class="logo">
-        <img src="{% static 'images/logo.jpg' %}" alt="Hawk Eye Logo" style="width: 150px;">
         <div class="title">HAWK EYE</div>
     </div>
 
@@ -78,5 +142,10 @@
     </div>
 
     <div class="footer">Hawk Eye – Keep your data safe</div>
+</body>
+</html>
+
+{% endblock %}
+
 </body>
 </html>
