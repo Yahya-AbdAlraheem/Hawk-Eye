@@ -17,3 +17,6 @@ def AboutUs(request):
 
 def Contact(request):
     return render(request, 'pages/Contact.html')
+
+def whois_lookup(request):
+    return render(request, 'pages/whois_lookup.html')
