@@ -22,8 +22,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('pages.urls')),
-    path('create-password/', include('PassManagement.urls')),
+    path('check-password/', include('PassManagement.urls')),
     path('extraction-data/', include('DarkWebManagement.urls')),
+    path('whois/', include('whois_lookup.urls')),
 ]
 
 # دعم عرض الملفات عند تشغيل السيرفر في وضع DEBUG
