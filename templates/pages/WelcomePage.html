@@ -51,15 +51,16 @@
 <body>
 
 <nav>
-    <div style="display: flex; align-items: center;">
-        <img src="{% static '/images/yahya.jpg' %}" alt="Hawk Logo" style="height: 40px; margin-right: 20px;">
-    </div>
+   
     <a href="{% url 'HomePage' %}">Home</a>
     <a href="{% url 'CreatePassword' %}">Check Password</a>
     <a href="{% url 'whois_lookup' %}">Whois Lookup</a>
     <a href="{% url 'AboutUs' %}">About Us</a>
     <a href="{% url 'Contact' %}">Contact</a>
     <a href="{% url 'admin:index' %}">Admin</a>
+    <div style="display: flex; align-items: center;">
+        <a href ="{% url 'HomePage' %}"> <img src="{% static '/images/logo.jpg' %}" alt="Hawk Logo" style="height: 40px; margin-right: 20px;"></a>
+    </div>
 </nav>
 
 <!-- Page Content -->
