@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'PassManagement.apps.PassManagementConfig',
     'DarkWebManagement.apps.DarkWebManagementConfig',
+    'whois_lookup.apps.whois_lookupConfig',
 ]
 
 MIDDLEWARE = [
