@@ -116,6 +116,24 @@
     .form-container button:hover {
         background-color: #00e0a1;
     }
+
+    .download-btn {
+        margin-top: 1rem;
+        padding: 0.6rem 1.2rem;
+        background-color: #00ffc3;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        color: #121212;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-weight: 500;
+    }
+
+    .download-btn:hover {
+        background-color: #00e0a1;
+    }
+
 </style>
 
 <div class="container">
@@ -123,7 +141,7 @@
 
     <form method="get">
         <div class="form-container">
-            <input type="text" name="domain" placeholder="Enter Domain Name" required>
+            <input type="text" name="domain" placeholder="Enter Domain Name" value="{{ request.GET.domain }}" required>
             <button type="submit">Search</button>
         </div>
     </form>
@@ -133,30 +151,44 @@
     {% endif %}
 
     {% if domain_info %}
-        <div class="result-box">
-            <h3>Domain Details:</h3>
-            <div class="info-box"><strong>Domain:</strong> {{ domain_info.domain }}</div>
-            <div class="info-box"><strong>Registrar:</strong> {{ domain_info.registrar }}</div>
-            <div class="info-box"><strong>Creation Date:</strong> {{ domain_info.creation_date }}</div>
-            <div class="info-box"><strong>Expiration Date:</strong> {{ domain_info.expiration_date }}</div>
+    <div class="result-box">
+        <h3>Domain Details:</h3>
+        <div class="info-box"><strong>Domain:</strong> {{ domain_info.domain }}</div>
+        <div class="info-box"><strong>Registrar:</strong> {{ domain_info.registrar }}</div>
+        <div class="info-box"><strong>Owner:</strong> {{ domain_info.owner }}</div>
+        <div class="info-box"><strong>Organization:</strong> {{ domain_info.org_name }}</div>
+        <div class="info-box"><strong>Email (Domain Contact):</strong> {{ domain_info.email }}</div>
+        <div class="info-box"><strong>Country:</strong> {{ domain_info.country }}</div>
+        <div class="info-box"><strong>City:</strong> {{ domain_info.city }}</div>
+        <div class="info-box"><strong>IP Address:</strong> {{ domain_info.ip_address }}</div>
+        <div class="info-box"><strong>Creation Date:</strong> {{ domain_info.creation_date }}</div>
+        <div class="info-box"><strong>Expiration Date:</strong> {{ domain_info.expiration_date }}</div>
 
-            <div class="info-box"><strong>Name Servers:</strong>
-                <div class="status-inline">
-                    {% for name_server in domain_info.name_servers %}
-                        {{ name_server }}
-                        <br>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="info-box"><strong>Status:</strong>
-                <div class="status-inline">
-                    {% for stat in domain_info.status %}
-                        {{ stat }} <br>
-                    {% endfor %}
-                </div>
+        <div class="info-box"><strong>Name Servers:</strong>
+            <div class="status-inline">
+                {% for ns in domain_info.name_servers %}
+                    <p>{{ ns.name }} - {{ ns.ip }}</p>
+                    {% empty %}
+                    <p>Blocked</p>
+                {% endfor %}
             </div>
         </div>
+
+        <div class="info-box"><strong>Status:</strong>
+            <div class="status-inline">
+                {% for stat in domain_info.status %}
+                    {{ stat }}<br>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Download button on the right -->
+        <form method="GET" action="{% url 'download_pdf' %}">
+            <div style="text-align: right;">
+                <button type="submit" class="download-btn">⬇ Download PDF</button>
+            </div>
+        </form>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
