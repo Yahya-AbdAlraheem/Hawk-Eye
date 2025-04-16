@@ -25,6 +25,7 @@ urlpatterns = [
     path('check-password/', include('PassManagement.urls')),
     path('extraction-data/', include('DarkWebManagement.urls')),
     path('whois/', include('whois_lookup.urls')),
+    path('dns/', include('dns_lookup.urls')),
 ]
 
 # دعم عرض الملفات عند تشغيل السيرفر في وضع DEBUG
