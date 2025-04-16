@@ -20,3 +20,6 @@ def Contact(request):
 
 def whois_lookup(request):
     return render(request, 'pages/whois_lookup.html')
+
+def dns_lookup(request):
+    return render(request, 'pages/dns_lookup.html')
