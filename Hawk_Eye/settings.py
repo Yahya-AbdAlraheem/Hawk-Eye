@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'PassManagement.apps.PassManagementConfig',
     'DarkWebManagement.apps.DarkWebManagementConfig',
     'whois_lookup.apps.whois_lookupConfig',
+    'dns_lookup.apps.dns_lookupConfig',
 ]
 
 MIDDLEWARE = [
@@ -108,11 +109,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# المسار الأساسي لمشروعك
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# إعدادات ملفات static
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'Hawk_Eye/static')
+    os.path.join(BASE_DIR, 'static'),  # المسار إلى مجلد static في المشروع
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # مجلد لتخزين ملفات static بعد جمعها في بيئة الإنتاج
 
 # Media files (images & videos from Dark Web)
 MEDIA_URL = '/media/'  # الرابط اللي رح تستخدمه للوصول للملفات
