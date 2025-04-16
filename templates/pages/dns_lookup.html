@@ -1,0 +1,284 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DNS Lookup - Hawk Eye</title>
+    {% block content %}
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #000000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 20%;
+            text-align: center;
+        }
+
+        #project-name {
+            font-size: 48px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            display: inline-block;
+            animation: slideDown 2s ease-out forwards;
+        }
+
+        .logo-container img {
+            width: 120px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .search-box {
+            position: absolute;
+            bottom: 180px;
+            margin: 10px;
+            padding: 10px;
+            border: 2px solid #fff;
+            border-radius: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .search-box input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 350px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2e2e2e;
+            color: white;
+        }
+
+        .search-box button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            background-color: #324456;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .search-box button:hover {
+            background-color: #36a5be;
+        }
+
+        .result-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 100px;
+            margin-top: 38%;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .result-box {
+            background-color: #0d1b2a;
+            padding: 30px;
+            border-radius: 15px;
+            width: 800px; /* عرض ثابت */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            margin: 0 auto; /* لتوسيط العنصر أفقياً */
+            box-sizing: border-box; /* يشمل الحشو والحدود ضمن العرض المحدد */
+        }
+        
+
+        .result-box h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #36a5be;
+        }
+
+        .record-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3a4b5c;
+        }
+
+        .label {
+            font-size: 20px;
+            font-weight: bold;
+            color: #36a5be;
+            font-size: 16px;
+        }
+
+        .value {
+            margin-top: 5px;
+            color: #d6d6d6;
+            font-size: 15px;
+            word-wrap: break-word;
+        }
+
+
+        .download-btn {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .download-btn a {
+            padding: 10px 20px;
+            background-color: #324456;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .download-btn a:hover {
+            background-color: #36a5be;
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a>
+        <a href="{% url 'WelcomePage' %}">
+            <img src="{% static 'images/Hawk_logo.jpg' %}" alt="Hawk Logo" style="height: 150px;">
+        </a>
+    </div>
+
+    <div class="search-box">
+        <form method="post" action="{% url 'dns_lookup' %}">
+            {% csrf_token %}
+            <input type="text" name="domain_name" placeholder="Enter Domain Name here ..." required pattern="^((?!\b(?:\d{1,3}\.){3}\d{1,3}\b).)*$" title="Please enter a valid domain name, not an IP address.">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    {% if results %}
+    <div class="result-wrapper">
+        <div class="result-box">
+            <h3>
+                <span style="color: #36a5be;">Analysis Results:</span>
+                <span style="color: white;">{{ domain_name }}</span>
+            </h3>
+            
+            <div class="record-item">
+                <span class="label">IPv4:</span>
+                <span class="value">
+                    {% if results.a_record %}
+                        {% for ip in results.a_record %}
+                            {{ ip }}<br>
+                        {% endfor %}
+                    {% else %}
+                        No IPv4 Record Found.
+                    {% endif %}
+                </span>
+            </div>
+            
+
+            <div class="record-item">
+                <span class="label">IPv6:</span>
+                <span class="value">
+                    {% if results.ipv6 %}
+                        {{ results.ipv6 }}<br>
+                    {% else %}
+                        No IPv6 Record Found.
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Alias Name:</span>
+                <span class="value">
+                    {% if results.cname_record %}
+                        {% for cname in results.cname_record %}
+                            {{ cname }}<br>
+                        {% endfor %}
+                    {% else %}
+                        No Alias Name Record Found.
+                    {% endif %}
+                </span>
+            </div>            
+                                   
+
+            <div class="record-item">
+                <span class="label">DNS Servers:</span>
+                <span class="value">
+                    {% if results.ns_record %}
+                        {% for ns in results.ns_record %}
+                            {{ ns }}<br>
+                        {% endfor %}
+                    {% else %}
+                        No DNS Record Found.
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Email Servers:</span>
+                <span class="value">
+                    {% if results.mx_record %}
+                        {% for mx in results.mx_record %}
+                        {{ mx }}<br>
+                        {% endfor %}
+                    {% else %}
+                        No Email Record Found.
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Time to Live:</span>
+                <span class="value">
+                    {% if results.ttl %}
+                        {{ results.ttl }} seconds.<br>
+                    {% else %}
+                        No Time to Live Found.
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">TXT Record:</span>
+                <span class="value">
+                    {% if results.txt_record %}
+                        {% for txt in results.txt_record %}
+                            <li>{{ txt|stringformat:"s"|cut:"b'"|cut:"'" }}</li><br>
+                        {% endfor %}
+                    {% else %}
+                        No TXT Record Found.
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="download-btn">
+                <a href="{% url 'download_pdf' domain_name=domain_name %}">⬇ Download PDF</a>
+            </div>
+
+        </div>
+    </div>
+    {% endif %}
+    {% endblock %}
+</body>
+</html>
