@@ -9,4 +9,5 @@ urlpatterns = [
     path('contact/', views.Contact, name='Contact'),
     path('whois_lookup/', views.whois_lookup, name='whois_lookup'),
     path('dns_lookup/', views.dns_lookup, name='dns_lookup'),
+    path('reverse_dns_lookup/', views.reverse_dns_lookup, name='reverse_dns_lookup'),
 ]
