@@ -1,0 +1,296 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reverse DNS Lookup - Hawk Eye</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #000000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 20%;
+            text-align: center;
+        }
+
+        #project-name {
+            font-size: 48px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            display: inline-block;
+            animation: slideDown 2s ease-out forwards;
+        }
+
+        .logo-container img {
+            width: 120px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        @keyframes slideDown {
+            0% { transform: translateY(-100px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .search-box {
+            position: absolute;
+            bottom: 180px;
+            margin: 10px;
+            padding: 10px;
+            border: 2px solid #fff;
+            border-radius: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .search-box input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 350px;
+            border: none;
+            border-radius: 5px;
+            background-color: #2e2e2e;
+            color: white;
+        }
+
+        .search-box button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            background-color: #324456;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .search-box button:hover {
+            background-color: #36a5be;
+        }
+
+        .result-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 100px;
+            margin-top: 38%;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .result-box {
+            background-color: #0d1b2a;
+            padding: 30px;
+            border-radius: 15px;
+            width: 800px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        .result-box h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #36a5be;
+        }
+
+        .record-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #3a4b5c;
+        }
+
+        .label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #36a5be;
+        }
+
+        .value {
+            margin-top: 5px;
+            color: #d6d6d6;
+            font-size: 15px;
+            word-wrap: break-word;
+        }
+
+        .map-container {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 200px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .download-btn {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .download-btn a {
+            padding: 10px 20px;
+            background-color: #324456;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .download-btn a:hover {
+            background-color: #36a5be;
+        }
+
+        .location-toggle {
+            cursor: pointer;
+            color: #d6d6d6;
+            user-select: none;
+        }
+
+        .error-message {
+            color:rgb(0, 0, 0);
+            background-color: rgba(255, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 510px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a>
+        <a href="{% url 'WelcomePage' %}">
+            <img src="{% static 'images/Hawk_logo.jpg' %}" alt="Hawk Logo" style="height: 150px;">
+        </a>
+    </div>
+
+    <div class="search-box">
+        <form method="post" action="{% url 'reverse_dns_lookup' %}">
+            {% csrf_token %}
+            <input type="text" name="ip_address" placeholder="Enter IP Address here ..." required>
+            <button type="submit">Lookup</button>
+        </form>
+    </div>
+    {% if error_message %}
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
+    {% if ip_address %}
+    <div class="result-wrapper">
+        <div class="result-box">
+            <h3>Analysis Results for: <span style="color: white;">{{ ip_address }}</span></h3>
+
+            <div class="record-item">
+                <span class="label">Host Name:</span>
+                <span class="value">{{ hostname }}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Autonomous System Number (ASN):</span>
+                <span class="value">{{ asn }} {% if asn_description %}({{ asn_description }}){% endif %}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Organization:</span>
+                <span class="value">{{ org }}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Location:</span>
+                <span class="value">
+                    <span class="location-toggle" onclick="toggleMap(this)">&#x3e; {{ location }}</span>
+                    <div class="map-container">
+                        <a href="https://www.google.com/maps?q={{ location }}" target="_blank">
+                            <iframe src="https://maps.google.com/maps?q={{ location }}&output=embed"></iframe>
+                        </a>
+                    </div>
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Internet Service Provider (ISP):</span>
+                <span class="value">{{ isp }}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Abuse Confidence Score:</span>
+                <span class="value">{{ abuse_confidence }}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Total Reports (During The Past 90 Days):</span>
+                <span class="value">
+                    {{ total_reports }}
+                    {% if total_reports < 5 %}
+                        <span style="color: #00e0a1;"> Rarely Reported</span>
+                    {% elif total_reports < 15 %}
+                        <span style="color: #f0ad4e;"> Moderately Reported !</span>
+                    {% else %}
+                        <span style="color: #d9534f;"> Frequently Reported !!</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label">Time To Live (TTL):</span>
+                <span class="value">
+                    {% if ttl %}
+                        {{ ttl }}
+                    {% else %}
+                        Not Found
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if ip_address %}
+            <div class="download-btn">
+                <a href="{% url 'download_pdf' ip_address %}">⬇ Download PDF</a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        function toggleMap(element) {
+            const mapDiv = element.nextElementSibling;
+            const isVisible = mapDiv.style.display === 'block';
+            mapDiv.style.display = isVisible ? 'none' : 'block';
+            element.innerHTML = isVisible ? '&#x3e; {{ location }}' : '&#x76; {{ location }}';
+        }
+    </script>
+</body>
+</html>
+{% endblock %}
