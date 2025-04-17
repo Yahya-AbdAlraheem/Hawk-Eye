@@ -1,3 +1,4 @@
+import re
 import dns.resolver
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -5,6 +6,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
 from io import BytesIO
+from urllib.parse import unquote
 
 
 def dns_lookup(request):
@@ -12,6 +14,14 @@ def dns_lookup(request):
 
     if request.method == "POST":
         domain_name = request.POST.get('domain_name').capitalize()
+
+        # نمط التحقق من أسماء DNS
+        dns_pattern = r'^(?!-)([a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,}$'
+
+        # تحقق من صحة اسم المجال
+        if not re.match(dns_pattern, domain_name):
+            error_message = "Sorry, The Domain Name You Entered is Invalid. Please Type The Correct Name, Such as: example.com."
+            return render(request, 'pages/dns_lookup.html', {'error_message': error_message})
 
         try:
             try:
@@ -40,7 +50,9 @@ def dns_lookup(request):
 
             try:
                 ns_records = dns.resolver.resolve(domain_name, 'NS')
-                results['ns_record'] = [str(ns.target) for ns in ns_records]
+                all_ns = [str(ns.target).rstrip('.') for ns in ns_records]  # نشيل النقطة من نهاية الاسم
+                valid_ns = [ns for ns in all_ns if re.match(dns_pattern, ns)]
+                results['ns_record'] = valid_ns if valid_ns else ["No valid DNS Servers found."]
             except dns.resolver.NoAnswer:
                 results['ns_record'] = ["No DNS Servers Found."]
 
@@ -73,7 +85,9 @@ def dns_lookup(request):
     return render(request, 'pages/dns_lookup.html')
 
 
+
 def download_pdf(request, domain_name):
+    domain_name = unquote(domain_name)
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
 
