@@ -23,3 +23,6 @@ def whois_lookup(request):
 
 def dns_lookup(request):
     return render(request, 'pages/dns_lookup.html')
+
+def reverse_dns_lookup(request):
+    return render(request, 'pages/reverse_dns_lookup.html')
