@@ -1,10 +1,20 @@
-import whois
-from django.shortcuts import render
-from datetime import datetime
 import socket
-from django.http import HttpResponse
+from datetime import datetime
+
+import whois
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+
+
+import re
+
+def is_valid_domain(domain):
+    pattern = r'^(?!\-)([a-zA-Z0-9\-]{1,63}\.)+[a-zA-Z]{2,}$'
+    return re.match(pattern, domain) is not None
 
 
 def whois_lookup(request):
@@ -14,8 +24,9 @@ def whois_lookup(request):
         if not domain:
             return render(request, 'pages/WHOIS.html', {'error': 'No Domain Provided'})
         
-        if not domain.endswith(('.com', '.net', '.org', '.gov', '.edu', '.io', '.co', '.info', '.biz', '.tv', '.me', '.us', '.ca', '.eu', '.asia', '.mobi', '.tel')):
-            return render(request, 'pages/WHOIS.html', {'error': 'Invalid Domain Format. Please Use a Valid Domain Such as .com, .net, .org, etc.'})
+        # تحقق باستخدام regex بدل allowed_extensions
+        if not is_valid_domain(domain):
+            return render(request, 'pages/WHOIS.html', {'error': 'Invalid Domain Format. Please enter a valid domain like example.com'})
 
         try:
             whois_info = whois.whois(domain)
@@ -23,7 +34,6 @@ def whois_lookup(request):
             if not whois_info:
                 return render(request, 'pages/WHOIS.html', {'error': 'No WHOIS Data Found For The Domain.'})
             
-            # تواريخ التسجيل والانتهاء
             creation_date = whois_info.creation_date if isinstance(whois_info.creation_date, datetime) else whois_info.creation_date[0] if whois_info.creation_date else 'Blocked'
             expiration_date = whois_info.expiration_date if isinstance(whois_info.expiration_date, datetime) else whois_info.expiration_date[0] if whois_info.expiration_date else 'Blocked'
             if creation_date != 'Blocked':
@@ -36,7 +46,6 @@ def whois_lookup(request):
             except:
                 ip_address = 'Blocked'
 
-            # جلب الـ IP لكل خادم من خوادم الأسماء
             name_servers_info = []
             for ns in whois_info.name_servers if whois_info.name_servers else ['Blocked']:
                 try:
@@ -60,7 +69,6 @@ def whois_lookup(request):
                 'ip_address': ip_address,
             }
 
-            # تخزين بيانات WHOIS في الجلسة
             request.session['domain_info'] = domain_info
 
             return render(request, 'pages/WHOIS.html', {'domain_info': domain_info})
@@ -71,9 +79,6 @@ def whois_lookup(request):
             return render(request, 'pages/WHOIS.html', {'error': f'An error occurred: {str(e)}'})
 
 
-from django.http import HttpResponse
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 
 def download_pdf(request):
     # استرجاع بيانات WHOIS من الجلسة
