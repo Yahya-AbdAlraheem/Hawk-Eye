@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'DarkWebManagement.apps.DarkWebManagementConfig',
     'whois_lookup.apps.whois_lookupConfig',
     'dns_lookup.apps.dns_lookupConfig',
+    'reverse_dns_lookup.apps.reverse_dns_lookupConfig',
 ]
 
 MIDDLEWARE = [
