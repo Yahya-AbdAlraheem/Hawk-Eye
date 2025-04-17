@@ -21,7 +21,7 @@
             color: white;
             padding: 14px 20px;
             text-decoration: none;
-            font-size: 20px;
+            font-size: 17px;
             display: inline-block;  /* تغيير من block إلى inline-block لعرض الروابط أفقيًا */
             text-align: center;  /* توسيط النص داخل الرابط */
         }
@@ -55,6 +55,7 @@
         <a href="{% url 'CreatePassword' %}" class="{% if request.resolver_match.url_name == 'CreatePassword' %}active{% endif %}">Check Password</a>
         <a href="{% url 'whois_lookup' %}" class="{% if request.resolver_match.url_name == 'whois_lookup' %}active{% endif %}">Whois Lookup</a>
         <a href="{% url 'dns_lookup' %}" class="{% if request.resolver_match.url_name == 'dns_lookup' %}active{% endif %}">DNS Lookup</a>
+        <a href="{% url 'reverse_dns_lookup' %}" class="{% if request.resolver_match.url_name == 'reverse_dns_lookup' %}active{% endif %}">Reverse DNS Lookup</a>
         <a href="{% url 'AboutUs' %}" class="{% if request.resolver_match.url_name == 'AboutUs' %}active{% endif %}">About Us</a>
         <a href="{% url 'Contact' %}" class="{% if request.resolver_match.url_name == 'Contact' %}active{% endif %}">Contact</a>
         <a href="{% url 'admin:index' %}" class="{% if request.resolver_match.url_name == 'admin:index' %}active{% endif %}">Admin</a>
