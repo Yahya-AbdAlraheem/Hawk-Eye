@@ -26,6 +26,7 @@ urlpatterns = [
     path('extraction-data/', include('DarkWebManagement.urls')),
     path('whois/', include('whois_lookup.urls')),
     path('dns/', include('dns_lookup.urls')),
+    path('reverse_dns/', include('reverse_dns_lookup.urls')),
 ]
 
 # دعم عرض الملفات عند تشغيل السيرفر في وضع DEBUG
