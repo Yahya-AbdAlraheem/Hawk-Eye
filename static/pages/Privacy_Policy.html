@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Hawk Eye</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #0f0f0f;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Navbar / Header Styling */
+        .header {
+            width: 100%;
+            padding: 20px 0;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(17, 27, 33, 0.95) 100%);
+            border-bottom: 1px solid rgba(79, 125, 201, 0.3);
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-container {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #3a6d99;
+            box-shadow: 0 0 15px rgba(79, 125, 201, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(79, 125, 201, 0.8);
+        }
+
+        .title-container {
+            margin-left: 15px;
+        }
+
+        .site-title {
+            font-size: 28px;
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(79, 125, 201, 0.5);
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #fff, #5682a3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            background-size: 200% auto;
+            animation: textShine 3s ease-in-out infinite alternate;
+        }
+
+        .site-tagline {
+            font-size: 14px;
+            color: #5682a3;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #5682a3, #3a6d99);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: linear-gradient(135deg, #4a7499, #2c5277);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 125, 201, 0.4);
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+        /* Page Title */
+        .page-title {
+            width: 100%;
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(17, 27, 33, 0.9) 0%, rgba(0, 0, 0, 0.85) 100%);
+            border-bottom: 3px solid rgba(79, 125, 201, 0.3);
+        }
+
+        .title-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(79, 125, 201, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79, 125, 201, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .page-title h1 {
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            font-size: 36px;
+            color: white;
+            margin: 0 0 10px;
+            text-shadow: 0 0 15px rgba(79, 125, 201, 0.7);
+            position: relative;
+        }
+
+        .page-title h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #5682a3, transparent);
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #d6d6d6;
+            max-width: 600px;
+            margin: 20px auto 0;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        /* Content Sections */
+        .policy-section {
+            margin: 20px 0;
+            padding: 30px;
+            border: 1px solid rgba(79, 125, 201, 0.2);
+            border-radius: 12px;
+            background: rgba(17, 27, 33, 0.7);
+            backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 1000px;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .policy-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(79, 125, 201, 0.2);
+            border-color: rgba(79, 125, 201, 0.4);
+        }
+
+        .policy-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(79, 125, 201, 0.1), transparent 70%);
+            z-index: -1;
+        }
+
+        .section-cyber-corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: #5682a3;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .top-left {
+            top: 0;
+            left: 0;
+            border-top: 2px solid;
+            border-left: 2px solid;
+        }
+
+        .top-right {
+            top: 0;
+            right: 0;
+            border-top: 2px solid;
+            border-right: 2px solid;
+        }
+
+        .bottom-left {
+            bottom: 0;
+            left: 0;
+            border-bottom: 2px solid;
+            border-left: 2px solid;
+        }
+
+        .bottom-right {
+            bottom: 0;
+            right: 0;
+            border-bottom: 2px solid;
+            border-right: 2px solid;
+        }
+
+        .policy-section h2 {
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            font-size: 28px;
+            color: #5682a3;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(79, 125, 201, 0.3);
+            letter-spacing: 2px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .policy-section h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #5682a3, transparent);
+        }
+
+        .policy-section h3 {
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            color: #5682a3;
+            font-size: 22px;
+            margin: 30px 0 15px;
+            letter-spacing: 1px;
+        }
+
+        .policy-section p, .policy-section li {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #d6d6d6;
+            margin-bottom: 15px;
+        }
+
+        .policy-section p strong, .policy-section li strong {
+            color: #fff;
+        }
+
+        .policy-section ul, .policy-section ol {
+            margin-bottom: 20px;
+            padding-left: 25px;
+        }
+
+        .policy-section li {
+            margin-bottom: 10px;
+        }
+
+        .policy-section a {
+            color: #5682a3;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .policy-section a:hover {
+            color: #79a6c9;
+            text-decoration: underline;
+        }
+
+        /* Table of Contents */
+        .policy-toc {
+            background-color: rgba(17, 27, 33, 0.8);
+            border: 1px solid rgba(79, 125, 201, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0 30px;
+        }
+
+        .policy-toc-title {
+            color: #5682a3;
+            font-family: 'Orbitron', 'Segoe UI', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .policy-toc ul {
+            list-style-type: decimal;
+        }
+
+        .policy-toc a {
+            color: #d6d6d6;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .policy-toc a:hover {
+            color: #5682a3;
+            transform: translateX(5px);
+            display: inline-block;
+        }
+
+        /* Custom Elements */
+        .highlight-box {
+            background-color: rgba(79, 125, 201, 0.1);
+            border-left: 4px solid #5682a3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(79, 125, 201, 0.3), transparent);
+            margin: 30px 0;
+            width: 100%;
+        }
+
+        .policy-date {
+            text-align: center;
+            color: #a0a0a0;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* Footer */
+        .policy-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(79, 125, 201, 0.2);
+            text-align: center;
+            font-size: 14px;
+            color: #a0a0a0;
+            width: 100%;
+        }
+
+        /* CTA */
+        .cta-container {
+            text-align: center;
+            margin: 40px 0 20px;
+        }
+        
+        .cta-button {
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #5682a3, #3a6d99);
+            color: white !important;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(79, 125, 201, 0.3);
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #4a7499, #2c5277);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 25px rgba(79, 125, 201, 0.5);
+            text-decoration: none !important;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #5682a3, #3a6d99);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            box-shadow: 0 0 10px rgba(79, 125, 201, 0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .back-to-top:hover {
+            background: linear-gradient(135deg, #4a7499, #2c5277);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(79, 125, 201, 0.7);
+        }
+
+        /* Floating particles */
+        .floating-particle {
+            position: absolute;
+            background-color: rgba(79, 125, 201, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animations */
+        @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .back-button {
+                margin-top: 15px;
+            }
+            
+            .page-title h1 {
+                font-size: 30px;
+            }
+            
+            .policy-section {
+                padding: 20px;
+            }
+            
+            .policy-section h2 {
+                font-size: 24px;
+            }
+            
+            .policy-section h3 {
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title h1 {
+                font-size: 26px;
+            }
+            
+            .site-title {
+                font-size: 24px;
+            }
+            
+            .logo-container img {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .policy-section h2 {
+                font-size: 22px;
+            }
+            
+            .policy-section h3 {
+                font-size: 18px;
+            }
+            
+            .policy-section p, .policy-section li {
+                font-size: 14px;
+            }
+        }
+        .header-container a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-container">
+            <a href="/contact/" class="logo-container">
+                <img src="/static/images/Hawk_logo.jpg" alt="Hawk Eye Logo">
+                <div class="title-container">
+                    <h1 class="site-title">Hawk Eye</h1>
+                    <p class="site-tagline">Open Source Intelligence</p>
+                </div>
+            </a>
+            <a href="/contact/" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Contact
+            </a>
+        </div>
+    </div>
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="title-background"></div>
+        <h1>Privacy Policy</h1>
+        <p class="page-subtitle">Your Privacy Is Our Priority</p>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content" id="policy-main">
+        <!-- Introduction Section -->
+        <div class="policy-section">
+            <div class="section-cyber-corner top-left"></div>
+            <div class="section-cyber-corner top-right"></div>
+            <div class="section-cyber-corner bottom-left"></div>
+            <div class="section-cyber-corner bottom-right"></div>
+            
+            <h2>Privacy Policy</h2>
+            
+            <div class="policy-date">
+                Last Updated: April 29, 2025
+            </div>
+
+            <div class="policy-toc">
+                <div class="policy-toc-title">Table of Contents</div>
+                <ul>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#information">Information We Collect</a></li>
+                    <li><a href="#usage">How We Use Your Information</a></li>
+                    <li><a href="#security">Data Security Measures</a></li>
+                    <li><a href="#sharing">Information Sharing</a></li>
+                    <li><a href="#retention">Data Retention</a></li>
+                    <li><a href="#rights">Your Rights</a></li>
+                    <li><a href="#cookies">Cookies and Tracking</a></li>
+                    <li><a href="#changes">Changes to This Policy</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <section id="introduction">
+                <h3>1. Introduction</h3>
+                <p>
+                    Welcome to Hawk Eye's Privacy Policy. At Hawk Eye, we are committed to protecting your privacy and ensuring 
+                    the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and 
+                    safeguard your information when you use our OSINT (Open Source Intelligence) tools and services.
+                </p>
+                <p>
+                    We understand the sensitive nature of cybersecurity and intelligence gathering. Our privacy practices 
+                    are designed with this in mind, focusing on maintaining confidentiality while providing valuable 
+                    security services. By using our website, tools, or services, you agree to the collection and use of 
+                    information in accordance with this policy.
+                </p>
+                <div class="highlight-box">
+                    <p>
+                        <i class="fas fa-shield-alt" style="color: #5682a3; margin-right: 8px;"></i>
+                        We prioritize your data security and operate with the highest standards of data protection and ethical handling.
+                    </p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="information">
+                <h3>2. Information We Collect</h3>
+                <p>We may collect the following types of information:</p>
+                <ul>
+                    <li>
+                        <strong>Personal Information:</strong> When you register, contact us, or use our services, we may collect 
+                        your name, email address, phone number, and other contact details you provide.
+                    </li>
+                    <li>
+                        <strong>Usage Information:</strong> We collect information about how you interact with our website and 
+                        services, including IP addresses, browser type, pages visited, time spent, and features used.
+                    </li>
+                    <li>
+                        <strong>Search Queries:</strong> The queries you enter into our tools are processed to deliver results, 
+                        but we implement privacy-preserving measures to protect your search activities.
+                    </li>
+                    <li>
+                        <strong>Technical Data:</strong> We collect device information, operating system details, and network 
+                        information to enhance service performance and security.
+                    </li>
+                </ul>
+                <p>
+                    <strong>Special Note on Password Lookups:</strong> Our Password Leaked Lookup service only processes secure 
+                    hashes of passwords. We never store, log, or maintain your actual passwords in our systems.
+                </p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="usage">
+                <h3>3. How We Use Your Information</h3>
+                <p>We use the collected information for the following purposes:</p>
+                <ul>
+                    <li>To provide, maintain, and improve our OSINT tools and services</li>
+                    <li>To process and respond to your inquiries and requests</li>
+                    <li>To notify you about changes to our services or policies</li>
+                    <li>To detect, prevent, and address technical issues or security vulnerabilities</li>
+                    <li>To analyze usage patterns and optimize user experience</li>
+                    <li>To personalize your experience when using our tools</li>
+                </ul>
+                <p>
+                    We process your information based on legitimate interests, contract fulfillment, legal compliance, 
+                    and with your consent where required by applicable law.
+                </p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="security">
+                <h3>4. Data Security Measures</h3>
+                <p>
+                    We implement robust security measures to protect your information from unauthorized access, alteration, 
+                    disclosure, or destruction. These measures include:
+                </p>
+                <ul>
+                    <li>End-to-end encryption for data transmission</li>
+                    <li>Secure hashing for password verification</li>
+                    <li>Regular security audits and vulnerability assessments</li>
+                    <li>Access controls and authentication mechanisms</li>
+                    <li>Server-side encryption for stored data</li>
+                    <li>Regular security training for our team members</li>
+                </ul>
+                <p>
+                    While we strive to use commercially acceptable means to protect your personal information, we cannot 
+                    guarantee absolute security. We continuously improve our security protocols to address emerging threats.
+                </p>
+                <div class="highlight-box">
+                    <p>
+                        <i class="fas fa-lock" style="color: #5682a3; margin-right: 8px;"></i>
+                        Our systems are built with security-first architecture, and we employ multiple layers of protection to safeguard your data.
+                    </p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="sharing">
+                <h3>5. Information Sharing</h3>
+                <p>We do not sell, trade, or otherwise transfer your personal information to third parties except in the following cases:</p>
+                <ul>
+                    <li>
+                        <strong>Service Providers:</strong> We may share information with trusted third parties who assist us in 
+                        operating our website and services, conducting business, or servicing you, provided they agree to keep 
+                        this information confidential.
+                    </li>
+                    <li>
+                        <strong>Legal Requirements:</strong> We may disclose information when required by law, to comply with 
+                        a legal process, or to protect our rights, privacy, safety, or property.
+                    </li>
+                    <li>
+                        <strong>With Your Consent:</strong> We may share information with third parties when we have your explicit 
+                        consent to do so.
+                    </li>
+                    <li>
+                        <strong>Business Transfers:</strong> In the event of a merger, acquisition, or asset sale, your personal 
+                        information may be transferred as part of the transaction. We will notify you via email and/or a prominent 
+                        notice on our website of any change in ownership or uses of your personal information.
+                    </li>
+                </ul>
+                <p>
+                    Any third parties with whom we share information are bound by confidentiality agreements and are restricted 
+                    from using the information for any purpose other than those outlined in this policy.
+                </p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="retention">
+                <h3>6. Data Retention</h3>
+                <p>
+                    We retain your personal information only for as long as necessary to fulfill the purposes outlined in this 
+                    Privacy Policy, for legitimate business operations, and to comply with legal obligations.
+                </p>
+                <p>
+                    Specific retention periods include:
+                </p>
+                <ul>
+                    <li>Account information is retained as long as your account is active</li>
+                    <li>Search queries may be stored in anonymized form for up to 30 days</li>
+                    <li>Contact form submissions are retained for up to one year</li>
+                    <li>Usage logs are retained for 90 days for security and service improvement purposes</li>
+                </ul>
+                <p>
+                    When personal information is no longer needed, we securely delete or anonymize it to prevent unauthorized access.
+                </p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="rights">
+                <h3>7. Your Rights</h3>
+                <p>
+                    Depending on your location, you may have certain rights regarding your personal information. These may include:
+                </p>
+                <ul>
+                    <li>The right to access the personal information we hold about you</li>
+                    <li>The right to rectify inaccurate or incomplete information</li>
+                    <li>The right to erasure of your personal information</li>
+                    <li>The right to restrict or object to processing of your information</li>
+                    <li>The right to data portability</li>
+                    <li>The right to withdraw consent at any time</li>
+                </ul>
+                <p>
+                    To exercise any of these rights, please contact us using the information provided in the "Contact Us" section.
+                    We will respond to your request within 30 days.
+                </p>
+                <div class="highlight-box">
+                    <p>
+                        <i class="fas fa-user-shield" style="color: #5682a3; margin-right: 8px;"></i>
+                        We respect your privacy rights and are committed to providing you with control over your personal information.
+                    </p>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="cookies">
+                <h3>8. Cookies and Tracking</h3>
+                <p>
+                    Our website uses cookies and similar tracking technologies to enhance your experience, analyze site usage, 
+                    and assist in our marketing efforts. Cookies are small files that a site or its service provider transfers to 
+                    your device which enables the site to recognize your browser and remember certain information.
+                </p>
+                <p>
+                    We use the following types of cookies:
+                </p>
+                <ul>
+                    <li>
+                        <strong>Essential Cookies:</strong> Required for the website to function properly and cannot be disabled.
+                    </li>
+                    <li>
+                        <strong>Analytical/Performance Cookies:</strong> Help us understand how visitors interact with our site.
+                    </li>
+                    <li>
+                        <strong>Functionality Cookies:</strong> Allow the website to remember choices you make.
+                    </li>
+                    <li>
+                        <strong>Targeting Cookies:</strong> Record your visit to our website, the pages you visit, and the links you follow.
+                    </li>
+                </ul>
+                <p>
+                    You can control cookies through your browser settings, but disabling certain cookies may limit your ability to use 
+                    some features of our site.
+                </p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="changes">
+                <h3>9. Changes to This Policy</h3>
+                <p>
+                    We may update this Privacy Policy periodically to reflect changes in our practices or for other operational, 
+                    legal, or regulatory reasons. The updated policy will be posted on this page with a revised "last updated" date.
+                </p>
+                <p>
+                    For significant changes, we will provide a more prominent notice, which may include email notifications to 
+                    registered users or a banner announcement on our website. We encourage you to review this policy periodically 
+                    to stay informed about how we are protecting your information.
+                </p>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="contact">
+                <h3>10. Contact Us</h3>
+                <p>
+                    If you have any questions, concerns, or requests regarding this Privacy Policy or our privacy practices, 
+                    please contact us at:
+                </p>
+                <p style="text-align: center;">
+                    <strong>Email:</strong> <a href="mailto:yhyybdalrhym13@gmail.com">yhyybdalrhym13@gmail.com</a><br>
+                    <strong>Alternative Email:</strong> <a href="mailto:hodaifa.haitham2003@gmail.com">hodaifa.haitham2003@gmail.com</a><br>
+                    <strong>Phone:</strong> +962 788964932 or +962 781598094
+                </p>
+                <p>
+                    We will make every effort to respond to your inquiry promptly and address your concerns effectively.
+                </p>
+            </section>
+
+            <div class="policy-footer">
+                <p>© 2025 Hawk Eye. All rights reserved.</p>
+                <p>This policy was last updated on April 29, 2025.</p>
+            </div>
+
+            <div class="cta-container">
+                <a href="/contact/" class="cta-button">
+                    <i class="fas fa-envelope"></i> Contact Us With Questions
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        // Back to top button functionality
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                if (this.getAttribute('href') !== '#') {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Animation for elements when they come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+            
+            document.querySelectorAll('.policy-section, section').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Create floating particles
+            const mainContent = document.querySelector('.main-content');
+            for (let i = 0; i < 20; i++) {
+                createParticle(mainContent);
+            }
+        });
+        
+        // Function to create floating particles
+        function createParticle(parent) {
+            const particle = document.createElement('div');
+            particle.classList.add('floating-particle');
+            
+            const size = Math.random() * 5 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            particle.style.left = `${posX}%`;
+            particle.style.top = `${posY}%`;
+            
+            const duration = Math.random() * 20 + 10;
+            particle.style.animation = `floatAnimation ${duration}s infinite ease-in-out`;
+            
+            // Create custom keyframe animation for each particle
+            const keyframes = `
+                @keyframes floatAnimation {
+                    0% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.2}; }
+                    25% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.1}; }
+                    50% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.3}; }
+                    75% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.1}; }
+                    100% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.2}; }
+                }
+            `;
+            
+            const style = document.createElement('style');
+            style.innerHTML = keyframes;
+            document.head.appendChild(style);
+            
+            parent.appendChild(particle);
+        }
+    </script>
+</body>
+</html>
