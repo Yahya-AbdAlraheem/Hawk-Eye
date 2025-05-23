@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawk Eye</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #111111;
+            --accent-color: #222222;
+            --text-color: #ffffff;
+            --highlight-color: #3d7cc9;
+            --matrix-color: #0d6efd;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin-top: 70px;  /* Space for fixed navbar */
+            background-color: var(--primary-color);
+            color: var(--text-color);
+        }
+        
+        /* Enhanced Navbar */
+        nav {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(61, 124, 201, 0.2);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        .logo-small {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            padding: 10px 0;
+        }
+
+        .logo-small img {
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 50%;
+            border: 1px solid var(--highlight-color);
+            box-shadow: 0 0 10px rgba(61, 124, 201, 0.5);
+        }
+
+        .logo-small h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(to right, #ffffff, #3d7cc9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+
+        .nav-links::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        nav a {
+            color: var(--text-color);
+            padding: 20px 15px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 10px;
+            left: 50%;
+            background: linear-gradient(to right, var(--highlight-color), transparent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+
+        nav a:hover, nav a.active {
+            opacity: 1;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 50%;
+        }
+
+        nav a i {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        /* Hamburger Menu for Mobile */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--text-color);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        /* Matrix Effect for Navbar */
+        .nav-matrix-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            opacity: 0.05;
+        }
+
+        .nav-matrix-column {
+            position: absolute;
+            top: -100%;
+            width: 10px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: navMatrixSlide 10s linear infinite;
+        }
+
+        .nav-matrix-column span {
+            font-size: 10px;
+            color: var(--matrix-color);
+            margin: 2px 0;
+        }
+
+        @keyframes navMatrixSlide {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .navbar-container {
+                padding: 0 10px;
+            }
+            
+            nav a {
+                padding: 20px 10px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background-color: rgba(0, 0, 0, 0.95);
+                flex-direction: column;
+                justify-content: flex-start;
+                padding: 20px 0;
+                transition: all 0.5s ease;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                overflow-y: auto;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            nav a {
+                width: 100%;
+                padding: 15px 20px;
+                font-size: 16px;
+                text-align: left;
+            }
+            
+            nav a::after {
+                bottom: 12px;
+                left: 20px;
+                transform: translateX(0);
+            }
+            
+            nav a:hover::after, nav a.active::after {
+                width: 30px;
+            }
+        }
+
+        /* Page Content - Just for demonstration */
+        .content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav id="mainNav">
+        <div class="navbar-container">
+            <a href="/" class="logo-small">
+                <img src="/static/images/Hawk_logo.jpg" alt="Hawk Eye">
+                <h1>Hawk Eye</h1>
+            </a>
+            
+            <div class="menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="{% url 'darkweb_lookup' %}" class="{% if request.resolver_match.url_name == 'darkweb_lookup' %}active{% endif %}">
+                    <i class="fas fa-search"></i> Dark Web Lookup
+                </a>
+                <a href="{% url 'TelegramManagement' %}" class="{% if request.resolver_match.url_name == 'TelegramManagement' %}active{% endif %}">
+                    <i class="fab fa-telegram"></i> Telegram Lookup
+                </a>
+                <a href="{% url 'whois_lookup' %}" class="{% if request.resolver_match.url_name == 'whois_lookup' %}active{% endif %}">
+                    <i class="fas fa-globe"></i> Whois Lookup
+                </a>
+                <a href="{% url 'dns_lookup' %}" class="{% if request.resolver_match.url_name == 'dns_lookup' %}active{% endif %}">
+                    <i class="fas fa-network-wired"></i> DNS Lookup
+                </a>
+                <a href="{% url 'reverse_dns_lookup' %}" class="{% if request.resolver_match.url_name == 'reverse_dns_lookup' %}active{% endif %}">
+                    <i class="fas fa-exchange-alt"></i> Reverse DNS
+                </a>
+                <a href="{% url 'CreatePassword' %}" class="{% if request.resolver_match.url_name == 'CreatePassword' %}active{% endif %}">
+                    <i class="fas fa-key"></i> Password Lookup
+                </a>
+                <a href="{% url 'AboutUs' %}" class="{% if request.resolver_match.url_name == 'AboutUs' %}active{% endif %}">
+                    <i class="fas fa-info-circle"></i> About
+                </a>
+                <a href="{% url 'Contact' %}" class="{% if request.resolver_match.url_name == 'Contact' %}active{% endif %}">
+                    <i class="fas fa-envelope"></i> Contact
+                </a>
+                <a href="{% url 'admin:index' %}" class="{% if request.resolver_match.url_name == 'admin:index' %}active{% endif %}">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+            </div>
+        </div>
+        
+        <!-- Matrix Effect Background for Navbar -->
+        <div class="nav-matrix-effect" id="navMatrixEffect"></div>
+    </nav>
+
+    <!-- المحتوى المتغير -->
+    {% block content %}
+    {% endblock %}
+
+    <script>
+        // Function to add matrix effect to navbar
+        function createNavMatrixEffect() {
+            const navMatrixEffect = document.getElementById('navMatrixEffect');
+            const numColumns = 20;
+            const values = ['0', '1'];
+
+            // Create columns
+            for (let i = 1; i <= numColumns; i++) {
+                const column = document.createElement('div');
+                column.classList.add('nav-matrix-column');
+                
+                // Random position and animation speed
+                column.style.left = `${Math.random() * 100}%`;
+                column.style.animationDuration = `${Math.random() * 5 + 5}s`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
+
+                // Add digits
+                const numDigits = Math.floor(Math.random() * 10) + 5;
+                for (let j = 0; j < numDigits; j++) {
+                    const span = document.createElement('span');
+                    span.textContent = values[Math.round(Math.random())];
+                    column.appendChild(span);
+                }
+
+                navMatrixEffect.appendChild(column);
+            }
+        }
+
+        // Mobile menu toggle function
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const navLinks = document.getElementById('navLinks');
+            const navLinkItems = document.querySelectorAll('nav a');
+            
+            // Create matrix effect
+            createNavMatrixEffect();
+            
+            // Mobile menu toggle
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                    
+                    // Toggle hamburger icon animation
+                    const spans = this.querySelectorAll('span');
+                    if (navLinks.classList.contains('active')) {
+                        spans[0].style.transform = 'rotate(45deg) translate(5px, 6px)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'rotate(-45deg) translate(5px, -6px)';
+                    } else {
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                });
+            }
+            
+            // Original functionality for active links
+            navLinkItems.forEach(link => {
+                link.addEventListener('mouseenter', () => {
+                    // When hovering, remove "active" class from all links
+                    navLinkItems.forEach(nav => nav.classList.remove('active'));
+                });
+            
+                link.addEventListener('mouseleave', () => {
+                    // When mouse leaves, restore "active" class to current link
+                    const currentUrl = window.location.pathname;
+                    navLinkItems.forEach(nav => {
+                        if (nav.getAttribute('href') === currentUrl) {
+                            nav.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Add "active" class on page load
+            const currentUrl = window.location.pathname;
+            navLinkItems.forEach(nav => {
+                if (nav.getAttribute('href') === currentUrl) {
+                    nav.classList.add('active');
+                }
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.getElementById('mainNav');
+                if (window.scrollY > 50) {
+                    navbar.style.padding = '0';
+                    navbar.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                } else {
+                    navbar.style.padding = '0';
+                    navbar.style.boxShadow = '0 2px 15px rgba(0, 0, 0, 0.5)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
