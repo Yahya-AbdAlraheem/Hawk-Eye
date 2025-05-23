@@ -1,0 +1,1134 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+{% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us - Hawk Eye</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #0f0f0f;
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+    }
+
+    /* Enhanced Hero Section Styles - متناسق مع النموذج الأول */
+    .hero-section {
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(17, 27, 33, 0.95) 100%), url('{% static "images/cyber-bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cyber-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(79, 125, 201, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(79, 125, 201, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+    }
+
+    .scanner-beam {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #3a6d99, transparent);
+        z-index: 1;
+        animation: scan 4s infinite;
+        opacity: 0.5;
+        box-shadow: 0 0 20px #3a6d99;
+    }
+
+    .hero-content {
+        text-align: center;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        max-width: 1200px;
+        padding: 0 20px;
+        animation: fadeIn 1.2s ease-out;
+    }
+
+    .hero-header {
+        margin-bottom: 40px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-container img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #3a6d99;
+        box-shadow: 0 0 25px rgba(79, 125, 201, 0.8);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .logo-container img:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 0 30px rgba(79, 125, 201, 1);
+    }
+
+    .logo-pulse {
+        animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    .title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 25px;
+    }
+
+    #project-name {
+        font-size: 52px;
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        text-shadow: 0 0 15px rgba(79, 125, 201, 0.7);
+        letter-spacing: 3px;
+        transition: all 0.3s ease;
+        background: linear-gradient(to right, #fff, #5682a3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: textShine 3s ease-in-out infinite alternate;
+        text-decoration: none;
+    }
+
+    .subtitle-line {
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(90deg, #5682a3, transparent);
+        margin: 8px 0;
+    }
+
+    .project-tagline {
+        font-size: 20px;
+        color: #5682a3;
+        font-weight: 300;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+
+    .hero-subtitle {
+        font-size: 22px;
+        line-height: 1.6;
+        color: #e6e6e6;
+        font-weight: 300;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 30px;
+        max-width: 800px;
+    }
+
+    .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 16px 36px;
+        background: linear-gradient(135deg, #5682a3, #3a6d99);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 0 20px rgba(79, 125, 201, 0.3);
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+    }
+
+    .hero-cta:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .hero-cta:hover:before {
+        left: 100%;
+    }
+
+    .hero-cta:hover {
+        background: linear-gradient(135deg, #4a7499, #2c5277);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 25px rgba(79, 125, 201, 0.5);
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeInUp 1.5s ease-out 0.5s forwards;
+        opacity: 0;
+    }
+
+    .mouse {
+        width: 30px;
+        height: 50px;
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        border-radius: 20px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    .wheel {
+        width: 6px;
+        height: 6px;
+        background-color: #5682a3;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: scrollWheel 2s infinite;
+    }
+
+    .arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .arrow span {
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-bottom: 2px solid #5682a3;
+        border-right: 2px solid #5682a3;
+        transform: rotate(45deg);
+        animation: arrowDown 2s infinite;
+    }
+
+    .arrow span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .arrow span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    /* أيقونة المعلومات الدائرية */
+    .info-circle-container {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(17, 27, 33, 0.7);
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 15px;
+        animation: pulse 2.5s infinite ease-in-out;
+        box-shadow: 0 0 15px rgba(79, 125, 201, 0.3);
+    }
+
+    .info-circle-container i {
+        color: #5682a3;
+        font-size: 18px;
+    }
+
+    /* Main Content Area */
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 40px 0;
+        background-color: #0f0f0f;
+        position: relative;
+    }
+
+    .main-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, #000000, transparent);
+        z-index: 1;
+    }
+
+    /* Matrix Rain */
+    .matrix-rain {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.2;
+    }
+
+    /* Accent Lines */
+    .cyber-accent-top, .cyber-accent-bottom {
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, #3a6d99 50%, transparent 100%);
+        position: relative;
+        margin: -40px 0 30px 0;
+    }
+    
+    .cyber-accent-bottom {
+        margin: 30px 0 -40px 0;
+    }
+
+    .cyber-accent-top:before, .cyber-accent-bottom:before {
+        content: '';
+        position: absolute;
+        width: 30%;
+        height: 1px;
+        background: #5682a3;
+        top: -5px;
+        left: 35%;
+        box-shadow: 0 0 10px #3a6d99;
+    }
+
+    .cyber-accent-bottom:before {
+        top: auto;
+        bottom: -5px;
+    }
+
+    /* About Section Styling */
+    .about-section {
+        margin: 30px 0;
+        padding: 40px;
+        border: 1px solid rgba(79, 125, 201, 0.2);
+        border-radius: 12px;
+        background: rgba(17, 27, 33, 0.7);
+        backdrop-filter: blur(10px);
+        width: 90%;
+        max-width: 1200px;
+        position: relative;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+    .about-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(79, 125, 201, 0.2);
+        border-color: rgba(79, 125, 201, 0.4);
+    }
+
+    .about-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at top right, rgba(79, 125, 201, 0.1), transparent 70%);
+        z-index: -1;
+    }
+
+    .section-cyber-corner {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-color: #5682a3;
+        z-index: 1;
+        opacity: 0.6;
+    }
+
+    .top-left {
+        top: 0;
+        left: 0;
+        border-top: 2px solid;
+        border-left: 2px solid;
+    }
+
+    .top-right {
+        top: 0;
+        right: 0;
+        border-top: 2px solid;
+        border-right: 2px solid;
+    }
+
+    .bottom-left {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid;
+        border-left: 2px solid;
+    }
+
+    .bottom-right {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid;
+        border-right: 2px solid;
+    }
+
+    .about-section h2 {
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 32px;
+        color: #5682a3;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+        text-shadow: 0 0 10px rgba(79, 125, 201, 0.3);
+        letter-spacing: 2px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .about-section h2::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -10px;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #5682a3, transparent);
+    }
+
+    .about-section p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #d6d6d6;
+        margin-bottom: 20px;
+        text-align: justify;
+    }
+
+    /* Services Grid */
+    .services-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        width: 100%;
+        margin: 40px 0;
+    }
+    
+    .service-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 20px;
+        border: 1px solid rgba(86, 130, 163, 0.3);
+        border-radius: 12px;
+        background: rgba(17, 27, 33, 0.7);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        height: 100%;
+    }
+    
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at top right, rgba(79, 125, 201, 0.1), transparent 70%);
+        z-index: 0;
+    }
+    
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(79, 125, 201, 0.3);
+        border-color: #5682a3;
+    }
+    
+    .service-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: #5682a3;
+        transition: all 0.5s ease;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .service-card:hover .service-icon {
+        transform: scale(1.2);
+        text-shadow: 0 0 20px rgba(79, 125, 201, 0.8);
+    }
+    
+    .service-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: white;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .service-card:hover .service-title {
+        color: #5682a3;
+    }
+    
+    .service-description {
+        font-size: 0.9rem;
+        color: #d6d6d6;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Stats Container */
+    .stat-container {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        margin: 40px 0;
+        flex-wrap: wrap;
+    }
+    
+    .stat-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+        transition: all 0.5s ease;
+        position: relative;
+    }
+
+    .stat-item::before {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: rgba(79, 125, 201, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+        transition: all 0.5s ease;
+    }
+    
+    .stat-item:hover {
+        transform: translateY(-10px);
+    }
+
+    .stat-item:hover::before {
+        transform: scale(1.5);
+        background: rgba(79, 125, 201, 0.2);
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #5682a3;
+        margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 0 10px rgba(79, 125, 201, 0.3);
+    }
+
+    .stat-item:hover .stat-number {
+        text-shadow: 0 0 15px rgba(79, 125, 201, 0.7);
+    }
+    
+    .stat-label {
+        font-size: 1.1rem;
+        color: #d6d6d6;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Floating particles */
+    .floating-particle {
+        position: absolute;
+        background-color: rgba(79, 125, 201, 0.2);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Animations */
+    @keyframes scan {
+        0% { top: 0%; }
+        100% { top: 100%; }
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        100% { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    @keyframes scrollWheel {
+        0% { opacity: 1; top: 10px; }
+        100% { opacity: 0; top: 30px; }
+    }
+
+    @keyframes arrowDown {
+        0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+        50% { opacity: 1; }
+        100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+    }
+
+    @keyframes textShine {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+        50% { transform: scale(1.05); border-color: rgba(79, 125, 201, 0.7); }
+        100% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1000px) {
+        .services-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .logo-container {
+            flex-direction: column;
+        }
+        
+        .title-container {
+            margin-left: 0;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        #project-name {
+            font-size: 36px;
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            padding: 0 20px;
+        }
+        
+        .about-section {
+            padding: 30px 20px;
+        }
+
+        .about-section h2 {
+            font-size: 28px;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+        }
+    }
+
+    @media (max-width: 650px) {
+        .services-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .service-card {
+            max-width: 350px;
+            margin: 0 auto;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #project-name {
+            font-size: 30px;
+        }
+        
+        .hero-subtitle {
+            font-size: 16px;
+        }
+        
+        .about-section h2 {
+            font-size: 24px;
+        }
+
+        .about-section p {
+            font-size: 14px;
+        }
+
+        .hero-cta {
+            padding: 14px 28px;
+            font-size: 16px;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="cyber-grid"></div>
+    <div class="scanner-beam"></div>
+    <div class="hero-content">
+        <div class="hero-header">
+            <div class="logo-container">
+                <a href="{% url 'WelcomePage' %}">
+                    <img src="{% static 'images/Hawk_logo.jpg' %}" alt="Hawk Logo" class="logo-pulse">
+                </a>
+                <div class="title-container">
+                    <h1><a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a></h1>
+                    <div class="subtitle-line"></div>
+                    <p class="project-tagline">Open Source Intelligence</p>
+                </div>
+            </div>
+        </div>
+        <p class="hero-subtitle">Explore The Power Behind Our Advanced Open-Source Intelligence Tools</p>
+        <a href="#about-section" class="hero-cta">
+            <span>Learn More</span>
+            <i class="fas fa-angle-down"></i>
+        </a>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <div class="arrow">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="info-circle-container">
+                <i class="fas fa-info-circle"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content">
+    <div class="cyber-accent-top"></div>
+
+    <!-- Who We Are -->
+    <div class="about-section" id="about-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Who We Are</h2>
+        <p>
+            The Hawk Eye Team Consists Of Undergraduate Cybersecurity Students With A Strong Passion For Digital Security And Threat Intelligence. Our Project Was Born Out Of A Desire To Build Practical, Impactful Tools That Tackle Real-World Security Challenges Faced In Today's Online Landscape.
+        </p>
+        <p>
+            We Specialize In OSINT (Open Source Intelligence), Network Analysis, Data Extraction, And Digital Forensics — With A Focus On Identifying Leaked Information From The Dark Web And Telegram, As Well As Investigating WHOIS Records, DNS, Reverse DNS, And Exposed Passwords.
+        </p>
+        <p>
+            Although We're Still Students, We Combine Our Academic Knowledge With Hands-On Experience To Create Tools That Are Both Technically Sound And User-Friendly. Our Mission Is To Make Advanced Cybersecurity Techniques More Accessible To Individuals And Organizations Seeking To Protect Their Digital Footprint.
+        </p>
+        <p>
+            Backed By A Shared Commitment To Learning, Innovation, And Security, The Hawk Eye Team Is Proud To Contribute To A Safer Digital Future — One Investigation At A Time.
+        </p>
+    </div>
+    
+    <!-- Our Mission -->
+    <div class="about-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Our Mission</h2>
+        <p>
+            Our Mission Is To Provide Reliable OSINT (Open Source Intelligence) Tools That Help Detect Potential Threats And Protect Digital Privacy. We Continuously Work To Develop Our Technologies And Expand Our Database To Provide The Best Possible Service. We Believe That Access To Information And Verification Tools Should Be Available To Everyone, While Adhering To The Highest Standards Of Privacy And Security.
+        </p>
+    </div>
+    
+    <!-- Our Services -->
+    <div class="about-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Our Services</h2>
+        <p style="text-align: center;">
+            We Offer a Variety of Advanced Tools For Searching and Verifying Information Across The Internet. Each Tool is Carefully Designed to Meet Specific Needs in The Field of Digital Security and Intelligence.
+        </p>            
+        
+        <div class="services-grid">
+            <!-- Service 1 -->
+            <a href="{% url 'HomePage' %}" class="service-card">
+                <div class="service-icon"><i class="fas fa-user-secret"></i></div>
+                <div class="service-title">Dark Web Data Lookup</div>
+                <div class="service-description">Search for leaked data on the dark web</div>
+            </a>
+            
+            <!-- Service 2 -->
+            <a href="{% url 'TelegramManagement' %}" class="service-card">
+                <div class="service-icon"><i class="fab fa-telegram-plane"></i></div>
+                <div class="service-title">Telegram Lookup</div>
+                <div class="service-description">Search for information in Telegram channels</div>
+            </a>
+            
+            <!-- Service 3 -->
+            <a href="{% url 'whois_lookup' %}" class="service-card">
+                <div class="service-icon"><i class="fas fa-search"></i></div>
+                <div class="service-title">Whois Lookup</div>
+                <div class="service-description">Verify domain registration information</div>
+            </a>
+            
+            <!-- Service 4 -->
+            <a href="{% url 'dns_lookup' %}" class="service-card">
+                <div class="service-icon"><i class="fas fa-globe"></i></div>
+                <div class="service-title">DNS Lookup</div>
+                <div class="service-description">Query DNS records for domains</div>
+            </a>
+            
+            <!-- Service 5 -->
+            <a href="{% url 'reverse_dns_lookup' %}" class="service-card">
+                <div class="service-icon"><i class="fas fa-exchange-alt"></i></div>
+                <div class="service-title">Reverse DNS Lookup</div>
+                <div class="service-description">Reverse search DNS records</div>
+            </a>
+            
+            <!-- Service 6 -->
+            <a href="{% url 'CreatePassword' %}" class="service-card">
+                <div class="service-icon"><i class="fas fa-key"></i></div>
+                <div class="service-title">Password Leaked Lookup</div>
+                <div class="service-description">Check for password breaches</div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Technology -->
+    <div class="about-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Our Technology</h2>
+        <p>
+            At Hawk Eye, We Leverage Cutting-Edge Technologies And Dynamic Caching Systems To Detect Leaked Information From The Dark Web And Telegram. Our System Pulls Relevant Data From Multiple Sources In Real-Time, Without The Need For Large Databases, Ensuring Fast And Efficient Processing.
+        </p>
+        <p>
+            For Password Checking, We Securely Compare The User's Hashed Password Against The Well-Known Rockyou.txt Breach List, Without Ever Storing Any Raw Passwords. Our System Checks For Leaked Passwords By Comparing The Hashed Version Of The User's Password With The Hashes In The Rockyou.txt List, Ensuring Privacy And Security Throughout The Process.
+        </p>
+        <p>
+            Additionally, We Integrate WHOIS Lookup, DNS, And Reverse DNS Functions To Gather Domain-Related Data, Giving Users Deeper Insights Into Domain Ownership And Associated Information. We Prioritize Privacy And Security By Employing Secure Hashing Algorithms Solely For Password Comparison, Guaranteeing That Sensitive Information Is Never Exposed Or Stored.
+        </p>
+    </div>
+    
+    <!-- Achievements -->
+    <div class="about-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Our Achievements</h2>
+        <div class="stat-container">
+            <div class="stat-item">
+                <div class="stat-number">100K+</div>
+                <div class="stat-label">Search Queries Processed</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-number">10M+</div>
+                <div class="stat-label">Leaked Passwords Detected</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Integrated Data Sources</div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Result Accuracy</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Security Commitment -->
+    <div class="about-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Our Security Commitment</h2>
+        <p>
+            We Are Committed To The Highest Standards Of Security And Privacy. All Searches Conducted Through Our Platform Are Securely Processed, And No Sensitive Data Is Stored On Our Servers. We Aim To Help You Protect Your Information Without Compromising Your Privacy. Your Trust Is Our Top Priority, Which Is Why We Implement The Best Security Practices Across All Our Services.
+        </p>
+    </div>
+    
+    <!-- Contact Us -->
+    <div class="about-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Contact Us</h2>
+        <p style="text-align: center;">Do you Have Questions or Inquiries? We're Here to Help.</p>
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{% url 'Contact' %}" class="hero-cta">
+                <span>Contact Us</span>
+                <i class="fas fa-paper-plane"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="cyber-accent-bottom"></div>
+</div>
+
+<!-- Matrix Rain Canvas -->
+<canvas id="matrix-rain" class="matrix-rain"></canvas>
+
+<script>
+    // Smooth scroll to sections when clicking navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Animation for elements when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.about-section, .service-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            observer.observe(el);
+        });
+
+        // Create floating particles
+        const heroSection = document.querySelector('.hero-section');
+        for (let i = 0; i < 30; i++) {
+            createParticle(heroSection);
+        }
+
+        // Add particles to main content as well
+        const mainContent = document.querySelector('.main-content');
+        for (let i = 0; i < 20; i++) {
+            createParticle(mainContent);
+        }
+        
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+        
+        // Make canvas full screen
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        
+        // Characters to display
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const charArray = chars.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        
+        // Array for drops - one per column
+        const drops = [];
+        
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        // Draw the matrix rain
+        function draw() {
+            // Set a semi-transparent black background to create fade effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Set text color to blue
+            ctx.fillStyle = '#5682a3';
+            ctx.font = fontSize + 'px monospace';
+            
+            // Loop through drops
+            for (let i = 0; i < drops.length; i++) {
+                // Get random character
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                
+                // Draw the character
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                // If it's reached the bottom or with random chance, reset it
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                // Move the drop down
+                drops[i]++;
+            }
+        }
+        
+        // Setup animation
+        setInterval(draw, 35);
+        
+        // Resize canvas when window is resized
+        window.addEventListener('resize', function() {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+        });
+    });
+
+    // Function to create floating particles
+    function createParticle(parent) {
+        const particle = document.createElement('div');
+        particle.classList.add('floating-particle');
+        
+        const size = Math.random() * 5 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        
+        const duration = Math.random() * 20 + 10;
+        particle.style.animation = `floatAnimation ${duration}s infinite ease-in-out`;
+        
+        // Create custom keyframe animation for each particle
+        const keyframes = `
+            @keyframes floatAnimation {
+                0% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.2}; }
+                25% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.1}; }
+                50% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.3}; }
+                75% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.1}; }
+                100% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.2}; }
+            }
+        `;
+        
+        const style = document.createElement('style');
+        style.innerHTML = keyframes;
+        document.head.appendChild(style);
+        
+        parent.appendChild(particle);
+    }
+
+    // Add counters animation for statistics
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set up the observer
+        const statObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statElement = entry.target;
+                    const finalValue = statElement.innerText;
+                    let suffix = '';
+                    
+                    if (finalValue.includes('+')) {
+                        suffix = '+';
+                    }
+                    
+                    let numericValue = parseFloat(finalValue.replace(/[^0-9.]/g, ''));
+                    let unit = '';
+                    
+                    if (finalValue.includes('K')) {
+                        unit = 'K';
+                        numericValue = numericValue * 1000;
+                    } else if (finalValue.includes('M')) {
+                        unit = 'M';
+                        numericValue = numericValue * 1000000;
+                    } else if (finalValue.includes('%')) {
+                        unit = '%';
+                    }
+                    
+                    statElement.innerText = '0' + (unit ? unit : '') + (suffix ? suffix : '');
+                    
+                    animateCounter(statElement, 0, numericValue, 2000, unit, suffix);
+                    statObserver.unobserve(statElement);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        // Observe all stat numbers
+        document.querySelectorAll('.stat-number').forEach(statElement => {
+            statObserver.observe(statElement);
+        });
+    });
+
+    // Counter animation function
+    function animateCounter(element, start, end, duration, unit, suffix) {
+        let startTime = null;
+        
+        function counterAnimation(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
+            const percentage = Math.min(progress / duration, 1);
+            const easeValue = easeOutCubic(percentage);
+            const current = start + (end - start) * easeValue;
+            
+            if (unit === 'K') {
+                element.innerText = (current / 1000).toFixed(0) + unit + suffix;
+            } else if (unit === 'M') {
+                element.innerText = (current / 1000000).toFixed(1) + unit + suffix;
+            } else if (unit === '%') {
+                element.innerText = current.toFixed(1) + unit + suffix;
+            } else {
+                element.innerText = current.toFixed(0) + suffix;
+            }
+            
+            if (percentage < 1) {
+                window.requestAnimationFrame(counterAnimation);
+            }
+        }
+        
+        window.requestAnimationFrame(counterAnimation);
+    }
+
+    // Easing function for smooth animation
+    function easeOutCubic(x) {
+        return 1 - Math.pow(1 - x, 3);
+    }
+</script>
+{% endblock %}

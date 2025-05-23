@@ -1,0 +1,2068 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+{% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Web Lookup - Hawk Eye</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #0f0f0f;
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Enhanced Hero Section Styles */
+    .hero-section {
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(17, 27, 33, 0.95) 100%), url('{% static "images/darkweb-bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cyber-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(79, 125, 201, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(79, 125, 201, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+    }
+
+    .scanner-beam {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #3a6d99, transparent);
+        z-index: 1;
+        animation: scan 4s infinite;
+        opacity: 0.5;
+        box-shadow: 0 0 20px #3a6d99;
+    }
+
+    .hero-content {
+        text-align: center;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        max-width: 1200px;
+        padding: 0 20px;
+        animation: fadeIn 1.2s ease-out;
+    }
+
+    .hero-header {
+        margin-bottom: 40px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-container img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #3a6d99;
+        box-shadow: 0 0 25px rgba(79, 125, 201, 0.8);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .logo-container img:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 0 30px rgba(79, 125, 201, 1);
+    }
+
+    .logo-pulse {
+        animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    .title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 25px;
+    }
+
+    #project-name {
+        font-size: 52px;
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        text-shadow: 0 0 15px rgba(79, 125, 201, 0.7);
+        letter-spacing: 3px;
+        transition: all 0.3s ease;
+        background: linear-gradient(to right, #fff, #5682a3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: textShine 3s ease-in-out infinite alternate;
+        text-decoration: none;
+    }
+
+    .subtitle-line {
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(90deg, #5682a3, transparent);
+        margin: 8px 0;
+    }
+
+    .project-tagline {
+        font-size: 20px;
+        color: #5682a3;
+        font-weight: 300;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+
+    .hero-description {
+        margin-bottom: 40px;
+        max-width: 800px;
+    }
+
+    .hero-subtitle {
+        font-size: 22px;
+        line-height: 1.6;
+        color: #e6e6e6;
+        font-weight: 300;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 30px;
+    }
+
+    .hero-features {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .feature {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .feature:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature i {
+        font-size: 24px;
+        color: #5682a3;
+        background: rgba(17, 27, 33, 0.5);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        box-shadow: 0 0 15px rgba(79, 125, 201, 0.2);
+    }
+
+    .feature span {
+        font-size: 16px;
+        color: #d6d6d6;
+        font-weight: 400;
+    }
+
+    .hero-action {
+        margin-top: 20px;
+    }
+
+    .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 16px 36px;
+        background: linear-gradient(135deg, #5682a3, #3a6d99);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 0 20px rgba(79, 125, 201, 0.3);
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .hero-cta:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .hero-cta:hover:before {
+        left: 100%;
+    }
+
+    .hero-cta:hover {
+        background: linear-gradient(135deg, #4a7499, #2c5277);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 25px rgba(79, 125, 201, 0.5);
+    }
+
+    .hero-cta:active {
+        transform: translateY(-1px);
+    }
+
+    .hero-cta i {
+        transition: transform 0.3s ease;
+    }
+
+    .hero-cta:hover i {
+        transform: translateX(5px);
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeInUp 1.5s ease-out 0.5s forwards;
+        opacity: 0;
+    }
+
+    .mouse {
+        width: 30px;
+        height: 50px;
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        border-radius: 20px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    .wheel {
+        width: 6px;
+        height: 6px;
+        background-color: #5682a3;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: scrollWheel 2s infinite;
+    }
+
+    .arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .arrow span {
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-bottom: 2px solid #5682a3;
+        border-right: 2px solid #5682a3;
+        transform: rotate(45deg);
+        animation: arrowDown 2s infinite;
+    }
+
+    .arrow span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .arrow span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    /* Digital Particles */
+    .digital-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    /* Fallback particle styles */
+    .fallback-particle {
+        position: absolute;
+        background-color: #5682a3;
+        border-radius: 50%;
+    }
+
+    /* Enhanced Search Section Styles */
+    .cyber-accent-top, .cyber-accent-bottom {
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, #3a6d99 50%, transparent 100%);
+        position: relative;
+        margin: -0px 0;
+    }
+
+    .cyber-accent-top:before, .cyber-accent-bottom:before {
+        content: '';
+        position: absolute;
+        width: 30%;
+        height: 1px;
+        background: #5682a3;
+        top: -5px;
+        left: 35%;
+        box-shadow: 0 0 10px #3a6d99;
+    }
+
+    .cyber-accent-bottom:before {
+        top: auto;
+        bottom: -5px;
+    }
+
+    .search-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 900px;
+        position: relative;
+        margin-bottom: 20px;
+        z-index: 2;
+        transform: scale(0.9); 
+        transform-origin: top center; 
+    }
+
+    .search-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search-header-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(58, 109, 153, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        position: relative;
+        border: 1px solid rgba(86, 130, 163, 0.4);
+        margin-top: -75px;
+    }
+
+    .search-header-icon i {
+        font-size: 24px;
+        color: #5682a3;
+    }
+
+    .search-header-icon:before {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 1px dashed rgba(86, 130, 163, 0.4);
+        animation: rotate 20s linear infinite;
+    }
+
+    .search-header h2 {
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 32px;
+        color: #5682a3;
+        margin-bottom: 15px;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(58, 109, 153, 0.3);
+    }
+
+    .search-header-line {
+        width: 120px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #5682a3, transparent);
+        margin-bottom: 15px;
+    }
+
+    .search-subheader {
+        font-size: 16px;
+        color: #d6d6d6;
+        max-width: 500px;
+        opacity: 0.8;
+    }
+
+    .search-box {
+        width: 100%;
+        padding: 6px;
+        position: relative;
+        background: linear-gradient(145deg, rgba(13, 20, 28, 0.9), rgba(25, 35, 45, 0.85));
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(58, 109, 153, 0.2);
+    }
+
+    .search-box-cyber-corner {
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        border-color: #5682a3;
+        z-index: 1;
+    }
+
+    .top-left {
+        top: 0;
+        left: 0;
+        border-top: 2px solid;
+        border-left: 2px solid;
+        border-top-left-radius: 8px;
+    }
+
+    .top-right {
+        top: 0;
+        right: 0;
+        border-top: 2px solid;
+        border-right: 2px solid;
+        border-top-right-radius: 8px;
+    }
+
+    .bottom-left {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid;
+        border-left: 2px solid;
+        border-bottom-left-radius: 8px;
+    }
+
+    .bottom-right {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid;
+        border-right: 2px solid;
+        border-bottom-right-radius: 8px;
+    }
+
+    .search-box-inner {
+        background-color: rgba(13, 20, 28, 0.8);
+        border-radius: 12px;
+        padding: 40px;
+        position: relative;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(58, 109, 153, 0.2);
+        overflow: hidden;
+    }
+
+    .search-box-inner:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at top right, rgba(58, 109, 153, 0.15), transparent 70%);
+        pointer-events: none;
+    }
+
+    .search-icon-container {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-pulse-ring {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid rgba(58, 109, 153, 0.3);
+        animation: pulse-ring 2s infinite;
+    }
+
+    .search-icon-container i {
+        font-size: 28px;
+        color: rgba(58, 109, 153, 0.6);
+        animation: pulse-icon 2s infinite alternate;
+    }
+
+    .search-box h3 {
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 24px;
+        color: #5682a3;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+    }
+
+    .access-tag {
+        font-size: 12px;
+        background-color: rgba(58, 109, 153, 0.2);
+        color: #5682a3;
+        padding: 5px 10px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+        margin-left: 15px;
+        position: relative;
+        top: -2px;
+        border: 1px solid rgba(86, 130, 163, 0.3);
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .input-group i {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #5682a3;
+        font-size: 18px;
+        z-index: 2;
+    }
+
+    .search-box input[type="text"] {
+        width: 100%;
+        padding: 18px 20px 18px 50px;
+        background: rgba(17, 27, 33, 0.7);
+        border: 1px solid rgba(58, 109, 153, 0.3);
+        color: white;
+        font-size: 16px;
+        border-radius: 8px;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .search-box input[type="text"]:focus {
+        outline: none;
+        border-color: #5682a3;
+        box-shadow: 0 0 15px rgba(58, 109, 153, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-box input[type="text"]::placeholder {
+        color: rgba(222, 222, 222, 0.4);
+    }
+
+    .input-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        width: 0;
+        background: linear-gradient(90deg, #3a6d99, #5682a3);
+        transition: width 0.3s ease;
+    }
+
+    .search-box input[type="text"]:focus + .input-indicator {
+        width: 100%;
+    }
+
+    .search-options {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .search-option-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: rgba(17, 27, 33, 0.4);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+
+    .search-option-item:hover {
+        background: rgba(17, 27, 33, 0.6);
+    }
+
+    .search-option-item.active {
+        border-color: rgba(58, 109, 153, 0.4);
+        background: rgba(58, 109, 153, 0.1);
+    }
+
+    .search-option-item i {
+        color: #5682a3;
+        font-size: 14px;
+    }
+
+    .search-option-item span {
+        color: #d6d6d6;
+        font-size: 14px;
+    }
+
+    .search-box button {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #3a6d99, #5682a3);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 16px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .button-text {
+        position: relative;
+        z-index: 2;
+    }
+
+    .search-box button i {
+        font-size: 18px;
+        position: relative;
+        z-index: 2;
+        transition: transform 0.3s ease;
+    }
+
+    .button-hover-effect {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+        z-index: 1;
+    }
+
+    .search-box button:hover {
+        background: linear-gradient(135deg, #336b9b, #4e7ea0);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-box button:hover i {
+        transform: translateX(5px);
+    }
+
+    .search-box button:hover .button-hover-effect {
+        left: 100%;
+    }
+
+    .search-security-indicator {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px dashed rgba(58, 109, 153, 0.2);
+    }
+
+    .security-icon {
+        width: 36px;
+        height: 36px;
+        background: rgba(58, 109, 153, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(58, 109, 153, 0.3);
+    }
+
+    .security-icon i {
+        color: #5682a3;
+        font-size: 14px;
+    }
+
+    .security-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .security-text span {
+        font-size: 12px;
+        color: #5682a3;
+        letter-spacing: 1px;
+    }
+
+    .security-dots {
+        display: flex;
+        gap: 5px;
+        margin-top: 5px;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+        background: rgba(58, 109, 153, 0.2);
+        border-radius: 50%;
+    }
+
+    .dot.active {
+        background: #5682a3;
+    }
+
+    /* Enhanced Error Message */
+    .error-message {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+        border-radius: 10px;
+        margin: 30px 0;
+        width: 90%;
+        max-width: 900px;
+    }
+
+    .error-icon {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        border-radius: 50%;
+        background: rgba(255, 107, 107, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .error-icon i {
+        color: #ff6b6b;
+        font-size: 20px;
+    }
+
+    .error-content h4 {
+        color: #ff6b6b;
+        margin-bottom: 5px;
+        font-size: 18px;
+    }
+
+    .error-content p {
+        color: #e6e6e6;
+        font-size: 15px;
+    }
+
+    /* Enhanced Results Section */
+    .results-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 90%;
+        max-width: 900px;
+        margin-bottom: 20px;
+    }
+
+    .results-summary {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .results-summary i {
+        font-size: 22px;
+        color: #5682a3;
+    }
+
+    .results-summary h3 {
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 22px;
+        color: #e6e6e6;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .results-count {
+        font-size: 14px;
+        color: #5682a3;
+        background: rgba(58, 109, 153, 0.1);
+        padding: 4px 10px;
+        border-radius: 20px;
+        border: 1px solid rgba(58, 109, 153, 0.3);
+    }
+
+    .results-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: rgba(58, 109, 153, 0.1);
+        border: 1px solid rgba(58, 109, 153, 0.3);
+        border-radius: 6px;
+        color: #5682a3;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .action-button:hover {
+        background: rgba(58, 109, 153, 0.2);
+    }
+
+    .action-button i {
+        font-size: 14px;
+    }
+
+    /* تصحيح صناديق النتائج لتبقى ثابتة الحجم */
+    .result-wrapper {
+        width: 90%;
+        max-width: 900px;
+        margin: 20px 0;
+    }
+
+    .result-box {
+        background: linear-gradient(145deg, rgba(13, 20, 28, 0.9), rgba(25, 35, 45, 0.85));
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), 0 0 20px rgba(58, 109, 153, 0.1);
+        border: 1px solid rgba(58, 109, 153, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        width: 120%;
+        box-sizing: border-box;
+    }
+
+    .result-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 30px rgba(58, 109, 153, 0.2);
+    }
+
+    .result-header {
+        display: flex;
+        align-items: center;
+        padding: 20px 25px;
+        background: rgba(13, 20, 28, 0.7);
+        border-bottom: 1px solid rgba(58, 109, 153, 0.15);
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .result-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+    }
+
+    .result-title i {
+        color: #5682a3;
+        font-size: 18px;
+    }
+
+    .result-title-text {
+        font-family: 'Orbitron', sans-serif;
+        color: #5682a3;
+        font-weight: 500;
+        font-size: 16px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 350px;
+    }
+
+    .result-meta {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-right: 15px;
+    }
+
+    .result-security {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        background: rgba(58, 109, 153, 0.1);
+        border-radius: 20px;
+        border: 1px solid rgba(58, 109, 153, 0.2);
+    }
+
+    .result-security i {
+        color: #5682a3;
+        font-size: 12px;
+    }
+
+    .result-security span {
+        color: #5682a3;
+        font-size: 12px;
+    }
+
+    .result-number {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-weight: 500;
+        color: #5682a3;
+        background: rgba(58, 109, 153, 0.1);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .result-number i {
+        font-size: 12px;
+    }
+
+    .result-toggle i {
+        color: #5682a3;
+        font-size: 16px;
+        transition: transform 0.3s ease;
+    }
+
+    .result-toggle i.rotate-icon {
+        transform: rotate(90deg);
+    }
+
+    .result-content {
+       padding: 25px;
+       background: rgba(13, 20, 28, 0.5);
+       display: none;
+       width: 100%;
+       box-sizing: border-box;
+       max-height: 0;
+       overflow: hidden;
+       transition: max-height 0.3s ease-in-out;
+   }
+
+   .result-content.active {
+       display: block;
+       max-height: 2000px; /* أقصى ارتفاع مسموح به - يمكن تعديله حسب حجم المحتوى */
+       animation: fadeIn 0.5s ease;
+   }
+
+   .record-item {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(58, 109, 153, 0.1);
+   }
+
+   .record-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+   }
+
+   .label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #5682a3;
+      font-weight: 500;
+      margin-bottom: 10px;
+   }
+
+   .label i {
+      font-size: 14px;
+      width: 16px;
+      text-align: center;
+   }
+
+   .value {
+      color: #d6d6d6;
+      line-height: 1.6;
+      font-size: 14px;
+      padding-left: 24px;
+      border-left: 2px solid rgba(58, 109, 153, 0.2);
+      overflow-wrap: break-word;
+      word-break: break-word; /* تأكد من أن النصوص الطويلة تنكسر بشكل صحيح */
+   }
+
+   .result-box a {
+      color: #8ab4f8;
+      text-decoration: none;
+      transition: color 0.2s ease;
+   }
+
+   .result-box a:hover {
+      color: #5682a3;
+      text-decoration: underline;
+   }
+
+   .images-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+   }
+
+   .images-container img {
+      max-width: 250px;
+      max-height: 250px;
+      border-radius: 6px;
+      border: 1px solid rgba(58, 109, 153, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+   }
+
+   .images-container img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(58, 109, 153, 0.4);
+   }
+
+   /* Enhanced Loading Animation */
+   .loading-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 30px auto;
+      animation: fadeIn 0.5s ease;
+      z-index: 20;
+      display: none;
+    }
+
+    .cyber-loader {
+        background-color: rgba(15, 25, 35, 0.85);
+        border-radius: 10px;
+        border: 1px solid rgba(79, 125, 201, 0.5);
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(79, 125, 201, 0.3);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Scanner beam effect */
+    .cyber-loader .scanner-beam {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(86, 130, 163, 0.1), 
+            rgba(86, 130, 163, 0.6), 
+            rgba(138, 180, 248, 0.8), 
+            rgba(138, 180, 248, 1), 
+            rgba(138, 180, 248, 0.8), 
+            rgba(86, 130, 163, 0.6), 
+            rgba(86, 130, 163, 0.1), 
+            transparent);
+        box-shadow: 0 0 15px rgba(138, 180, 248, 0.8);
+        animation: scanning 2s linear infinite;
+        z-index: 5;
+    }
+
+    /* Hexagon loader */
+    .hexagon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80px;
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .hexagon {
+        position: absolute;
+        width: 60px;
+        height: 35px;
+        background-color: rgba(58, 109, 153, 0.2);
+        margin: 0 auto;
+        border-radius: 5px;
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        box-shadow: 0 0 10px rgba(79, 125, 201, 0.3);
+        transform-origin: center;
+    }
+
+    .hexagon:before,
+    .hexagon:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+    }
+
+    .hexagon:before {
+        top: -18px;
+        border-bottom: 18px solid rgba(58, 109, 153, 0.2);
+    }
+
+    .hexagon:after {
+        bottom: -18px;
+        border-top: 18px solid rgba(58, 109, 153, 0.2);
+    }
+
+    .hex1 {
+        animation: pulse 2s infinite, rotate 6s linear infinite;
+        z-index: 3;
+    }
+
+    .hex2 {
+        transform: scale(0.8);
+        animation: pulse-inverse 2s infinite, rotate-reverse 8s linear infinite;
+        z-index: 2;
+    }
+
+    .hex3 {
+        transform: scale(1.2);
+        opacity: 0.3;
+        animation: pulse 3s infinite, rotate 10s linear infinite;
+        z-index: 1;
+    }
+
+    /* Animated loading text */
+    .loading-text {
+        text-align: center;
+        margin: 15px 0;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 20px;
+        color: #5682a3;
+        font-weight: bold;
+        letter-spacing: 2px;
+        display: flex;
+        justify-content: center;
+        text-shadow: 0 0 8px rgba(79, 125, 201, 0.5);
+    }
+
+    .letter {
+        animation: glow 1.5s linear infinite;
+        animation-delay: calc(0.1s * var(--i));
+    }
+
+    /* Progress bar */
+    .progress-bar {
+        width: 100%;
+        height: 4px;
+        background-color: rgba(58, 109, 153, 0.2);
+        border-radius: 2px;
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #3a6d99, #5682a3, #8ab4f8);
+        animation: progress 3s infinite ease-in-out;
+        box-shadow: 0 0 8px rgba(79, 125, 201, 0.7);
+    }
+
+   /* Matrix Rain */
+   .matrix-rain {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.2;
+   }
+
+   /* Animation Keyframes */
+   @keyframes scan {
+      0% { top: 0%; opacity: 0.3; }
+      50% { opacity: 0.7; }
+      100% { top: 100%; opacity: 0.3; }
+   }
+
+   @keyframes scanning {
+      0% { top: 0; }
+      50% { top: calc(100% - 2px); }
+      100% { top: 0; }
+   }
+
+   @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+   }
+
+   @keyframes fadeInUp {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        100% { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+   @keyframes scrollWheel {
+        0% { opacity: 1; top: 10px; }
+        100% { opacity: 0; top: 30px; }
+    }
+
+    @keyframes arrowDown {
+        0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+        50% { opacity: 1; }
+        100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+    }
+
+   @keyframes textShine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+   }
+
+   @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(79, 125, 201, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(79, 125, 201, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(79, 125, 201, 0); }
+   }
+
+   @keyframes pulse-glow {
+      0% { box-shadow: 0 0 5px rgba(58, 109, 153, 0.6); }
+      50% { box-shadow: 0 0 15px rgba(58, 109, 153, 0.8); }
+      100% { box-shadow: 0 0 5px rgba(58, 109, 153, 0.6); }
+   }
+
+   @keyframes pulse-ring {
+      0% {
+          transform: scale(0.8);
+          opacity: 0.3;
+      }
+      50% {
+          opacity: 0.6;
+      }
+      100% {
+          transform: scale(1.1);
+          opacity: 0.1;
+      }
+   }
+
+   @keyframes pulse-icon {
+      0% {
+          transform: scale(1);
+      }
+      100% {
+          transform: scale(1.15);
+      }
+   }
+
+   @keyframes rotate {
+      0% {
+          transform: rotate(0deg);
+      }
+      100% {
+          transform: rotate(360deg);
+      }
+   }
+
+   @keyframes rotate-reverse {
+      0% { transform: scale(0.8) rotate(0deg); }
+      100% { transform: scale(0.8) rotate(-360deg); }
+   }
+
+   @keyframes glow {
+      0% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+      20% { text-shadow: 0 0 15px rgba(138, 180, 248, 0.8); opacity: 1; }
+      40% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+      100% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+   }
+
+   @keyframes progress {
+      0% { width: 0%; }
+      20% { width: 20%; }
+      40% { width: 40%; }
+      60% { width: 65%; }
+      80% { width: 85%; }
+      100% { width: 100%; }
+   }
+
+   /* Responsive Adjustments */
+   @media (max-width: 768px) {
+      .logo-container {
+          flex-direction: column;
+          text-align: center;
+      }
+      
+      .title-container {
+          margin-left: 0;
+          margin-top: 20px;
+          align-items: center;
+      }
+      
+      #project-name {
+          font-size: 40px;
+      }
+      
+      .hero-subtitle {
+          font-size: 18px;
+      }
+      
+      .hero-features {
+          flex-direction: column;
+          gap: 20px;
+      }
+      
+      .feature {
+          flex-direction: row;
+          justify-content: center;
+          width: 100%;
+      }
+      
+      .feature i {
+          width: 50px;
+          height: 50px;
+          font-size: 20px;
+      }
+      
+      .scroll-indicator {
+          display: none;
+      }
+      
+      .search-box-inner {
+          padding: 30px 20px;
+      }
+      
+      .search-options {
+          flex-direction: column;
+          gap: 10px;
+      }
+      
+      .results-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+      }
+      
+      .results-actions {
+          width: 100%;
+          justify-content: space-between;
+      }
+      
+      .result-meta {
+          display: none;
+      }
+      
+      .result-title-text {
+          max-width: 200px;
+      }
+      
+      .search-icon-container {
+          display: none;
+      }
+      
+      .cyber-scanner {
+          height: 220px;
+      }
+   }
+
+   @media (max-width: 480px) {
+      .search-header h2 {
+          font-size: 24px;
+      }
+      
+      .search-box h3 {
+          font-size: 20px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+      }
+      
+      .access-tag {
+          margin-left: 0;
+      }
+      
+      .search-subheader {
+          font-size: 14px;
+      }
+      
+      .search-security-indicator {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+      }
+      
+      .search-box input[type="text"] {
+          padding: 15px 15px 15px 45px;
+          font-size: 14px;
+      }
+      
+      .search-box button {
+          padding: 14px;
+          font-size: 14px;
+      }
+      
+      .result-title-text {
+          max-width: 150px;
+      }
+      
+      .images-container img {
+          max-width: 120px;
+          max-height: 120px;
+      }
+      
+      .logo-container img {
+          width: 100px;
+          height: 100px;
+      }
+      
+      #project-name {
+          font-size: 32px;
+      }
+      
+      .project-tagline {
+          font-size: 16px;
+      }
+      
+      .hero-subtitle {
+          font-size: 16px;
+      }
+      
+      .hero-cta {
+          padding: 14px 28px;
+          font-size: 16px;
+      }
+   }
+</style>
+
+<!-- New Enhanced Hero Section -->
+<div class="hero-section">
+  <div class="cyber-grid"></div>
+  <div class="scanner-beam"></div>
+  <div class="hero-content">
+      <div class="hero-header">
+          <div class="logo-container">
+              <a href="{% url 'WelcomePage' %}">
+                  <img src="{% static 'images/Hawk_logo.jpg' %}" alt="Hawk Logo" class="logo-pulse">
+              </a>
+              <div class="title-container">
+                  <h1><a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a></h1>
+                  <div class="subtitle-line"></div>
+                  <p class="project-tagline">Dark Web Intelligence System</p>
+              </div>
+          </div>
+      </div>
+      <div class="hero-description">
+          <p class="hero-subtitle">Advanced intelligence Platform For Exploring Hidden Services and Extracting Critical Information From The Dark Web With Maximum Security.</p>
+          <div class="hero-features">
+              <div class="feature">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>Secure Scanning</span>
+              </div>
+              <div class="feature">
+                  <i class="fas fa-search"></i>
+                  <span>Deep Analysis</span>
+              </div>
+              <div class="feature">
+                  <i class="fas fa-bolt"></i>
+                  <span>Real-time Results</span>
+              </div>
+          </div>
+      </div>
+      <div class="hero-action">
+          <a href="#search-section" class="hero-cta">
+              <span>Start Investigation</span>
+              <i class="fas fa-angle-right"></i>
+          </a>
+      </div>
+      <div class="scroll-indicator">
+          <div class="mouse">
+              <div class="wheel"></div>
+          </div>
+          <div class="arrow">
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+      </div>
+  </div>
+  <div class="digital-particles" id="particles-js"></div>
+</div>
+
+<!-- Enhanced Search Section -->
+<div class="main-content" id="search-section">
+  <div class="cyber-accent-top"></div>
+  
+  <div class="search-container">
+      <div class="search-header">
+          <div class="search-header-icon">
+              <i class="fas fa-satellite-dish"></i>
+          </div>
+          <h2>DARK WEB INTELLIGENCE</h2>
+          <div class="search-header-line"></div>
+          <p class="search-subheader">Navigate Through Hidden Services With Advanced Anonymity Protocols</p>
+      </div>
+      
+      <div class="search-box">
+          <div class="search-box-cyber-corner top-left"></div>
+          <div class="search-box-cyber-corner top-right"></div>
+          <div class="search-box-cyber-corner bottom-left"></div>
+          <div class="search-box-cyber-corner bottom-right"></div>
+          
+          <div class="search-box-inner">
+              <div class="search-icon-container">
+                  <div class="search-pulse-ring"></div>
+                  <i class="fas fa-search-location"></i>
+              </div>
+              
+              <h3>Dark Web Lookup <span class="access-tag">SECURE ACCESS</span></h3>
+              
+              <form method="get" action="{% url 'darkweb_lookup' %}#search-section" id="search-form">
+                  <div class="input-group">
+                      <i class="fas fa-search"></i>
+                      <input type="text" name="query" placeholder="Enter onion address or search keywords..." required value="{{ request.GET.query }}">
+                      <span class="input-indicator"></span>
+                  </div>
+                  
+                  <div class="search-options">
+                      <div class="search-option-item active">
+                          <i class="fas fa-globe"></i>
+                          <span>All Dark Web</span>
+                      </div>
+                      <div class="search-option-item">
+                          <i class="fas fa-user-secret"></i>
+                          <span>Secure Mode</span>
+                      </div>
+                      <div class="search-option-item">
+                          <i class="fas fa-shield-alt"></i>
+                          <span>Enhanced Privacy</span>
+                      </div>
+                  </div>
+                  
+                  <button type="submit">
+                      <span class="button-text">INITIATE DARK WEB SCAN</span> 
+                      <i class="fas fa-angle-right"></i>
+                      <span class="button-hover-effect"></span>
+                  </button>
+
+                  <div id="loading-indicator" class="loading-container">
+                      <div class="cyber-loader">
+                          <div class="scanner-beam"></div>
+                          <div class="hexagon-container">
+                              <div class="hexagon hex1"></div>
+                              <div class="hexagon hex2"></div>
+                              <div class="hexagon hex3"></div>
+                          </div>
+                          <div class="loading-text">
+                              <span class="letter" style="--i:1">S</span>
+                              <span class="letter" style="--i:2">C</span>
+                              <span class="letter" style="--i:3">A</span>
+                              <span class="letter" style="--i:4">N</span>
+                              <span class="letter" style="--i:5">N</span>
+                              <span class="letter" style="--i:6">I</span>
+                              <span class="letter" style="--i:7">N</span>
+                              <span class="letter" style="--i:8">G</span>
+                              <span class="letter" style="--i:9">.</span>
+                              <span class="letter" style="--i:10">.</span>
+                              <span class="letter" style="--i:11">.</span>
+                          </div>
+                          <div class="progress-bar">
+                              <div class="progress-fill"></div>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+              
+              <div class="search-security-indicator">
+                  <div class="security-icon">
+                      <i class="fas fa-lock"></i>
+                  </div>
+                  <div class="security-text">
+                      <span>ENCRYPTED CONNECTION</span>
+                      <div class="security-dots">
+                          <span class="dot active"></span>
+                          <span class="dot active"></span>
+                          <span class="dot active"></span>
+                          <span class="dot active"></span>
+                          <span class="dot active"></span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  {% if error %}
+      <div class="error-message">
+          <div class="error-icon">
+              <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="error-content">
+              <h4>Scan Error Detected</h4>
+              <p>{{ error }}</p>
+          </div>
+      </div>
+  {% endif %}
+
+  {% if results %}
+  <div class="results-header">
+      <div class="results-summary">
+          <i class="fas fa-chart-network"></i>
+          <h3>Scan Results <span class="results-count">{{ results|length }} Findings</span></h3>
+      </div>
+      <div class="results-actions">
+          <button class="action-button">
+              <i class="fas fa-file-export"></i>
+              <span>Export</span>
+          </button>
+          <button class="action-button">
+              <i class="fas fa-filter"></i>
+              <span>Filter</span>
+          </button>
+      </div>
+  </div>
+  
+  <div class="result-wrapper">
+      {% for result in results %}
+      <div class="result-box">
+          <div class="result-header" onclick="toggleResult(this)">
+              <div class="result-title">
+                  <i class="fas fa-globe"></i>
+                  <div class="result-title-text">{{ result.url }}</div>
+              </div>
+              <div class="result-meta">
+                  <div class="result-security">
+                      <i class="fas fa-shield-check"></i>
+                      <span>Verified</span>
+                  </div>
+                  <div class="result-number">
+                      <i class="fas fa-search"></i>
+                      Result {{ forloop.counter }}
+                  </div>
+              </div>
+              <div class="result-toggle">
+                  <i class="fas fa-chevron-right"></i>
+              </div>
+          </div>
+          
+          <div class="result-content">
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-link"></i> URL:</span>
+                  <span class="value"><a href="{{ result.url }}" target="_blank">{{ result.url }}</a></span>
+              </div>
+
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-align-left"></i> Description:</span>
+                  <span class="value">{{ result.description|default:"Not Found" }}</span>
+              </div>
+
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-file-alt"></i> Text Content:</span>
+                  <span class="value">{{ result.full_text|default:"Not Found" }}</span>
+              </div>
+
+              <div class="record-item">
+                   <span class="label"><i class="fas fa-calendar-alt"></i>Date:</span>
+                   <span class="value">{{ result.publish_date|default:"Not Found" }}</span>
+              </div>
+
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-heading"></i> Header 1:</span>
+                  <span class="value">{{ result.h1|default:"Not Found" }}</span>
+              </div>
+
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-heading"></i> Header 2:</span>
+                  <span class="value">{{ result.h2|default:"Not Found" }}</span>
+              </div>
+
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-heading"></i> Header 3:</span>
+                  <span class="value">{{ result.h3|default:"Not Found" }}</span>
+              </div>
+
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-envelope"></i> Emails:</span>
+                  <span class="value">{% if result.emails %}{{ result.emails|join:", " }}{% else %}Not Found{% endif %}</span>
+              </div>
+
+              <div class="record-item">
+                  <span class="label"><i class="fas fa-images"></i> Images:</span>
+                  <div class="value">
+                      {% if result.images %}
+                          <div class="images-container">
+                              {% for img in result.images %}
+                              <img src="{{ MEDIA_URL }}{{ img }}" alt="Dark Web Image">
+                              {% endfor %}
+                          </div>
+                      {% else %}
+                          Not Found
+                      {% endif %}
+                  </div>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
+  
+  <div class="cyber-accent-bottom"></div>
+</div>
+
+<!-- Matrix Rain Canvas -->
+<canvas id="matrix-rain" class="matrix-rain"></canvas>
+
+<script>
+    // Toggle result content visibility - وظيفة تبديل عرض المحتوى محسّنة
+function toggleResult(element) {
+    const content = element.nextElementSibling;
+    const icon = element.querySelector('.result-toggle i');
+    
+    // Smooth Toggle - التبديل السلس للمحتوى
+    if (content.classList.contains('active')) {
+        icon.classList.remove('rotate-icon');
+        // حفظ ارتفاع العنصر قبل الإغلاق
+        content.style.maxHeight = '0';
+        // انتظر انتهاء التحول قبل إخفاء المحتوى
+        setTimeout(() => {
+            content.classList.remove('active');
+        }, 300);
+    } else {
+        content.classList.add('active');
+        icon.classList.add('rotate-icon');
+        // تعيين الارتفاع القصوى للمحتوى بعد ظهوره
+        content.style.maxHeight = 'none';
+    }
+}
+
+// Matrix rain effect
+const canvas = document.getElementById('matrix-rain');
+const ctx = canvas.getContext('2d');
+
+// Make canvas full screen
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+// Characters to display
+const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+const charArray = chars.split('');
+
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+
+// Array for drops - one per column
+const drops = [];
+
+// Initialize drops
+for (let i = 0; i < columns; i++) {
+    drops[i] = 1;
+}
+
+// Draw the matrix rain
+function draw() {
+    // Set a semi-transparent black background to create fade effect
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Set text color to blue
+    ctx.fillStyle = '#5682a3';
+    ctx.font = fontSize + 'px monospace';
+    
+    // Loop through drops
+    for (let i = 0; i < drops.length; i++) {
+        // Get random character
+        const text = charArray[Math.floor(Math.random() * charArray.length)];
+        
+        // Draw the character
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        
+        // If it's reached the bottom or with random chance, reset it
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+        }
+        
+        // Move the drop down
+        drops[i]++;
+    }
+}
+
+// Setup animation
+setInterval(draw, 35);
+
+// Resize canvas when window is resized
+window.addEventListener('resize', function() {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click events to search options
+    const searchOptions = document.querySelectorAll('.search-option-item');
+    
+    searchOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove active class from all options
+            searchOptions.forEach(opt => opt.classList.remove('active'));
+            
+            // Add active class to clicked option
+            this.classList.add('active');
+        });
+    });
+    
+    // تحسين تحرك مؤشر input - تفعيل المؤشر عند التركيز على حقل الإدخال
+    const searchInput = document.querySelector('.search-box input[type="text"]');
+    if (searchInput) {
+        searchInput.addEventListener('focus', function() {
+            this.nextElementSibling.style.width = '100%';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.nextElementSibling.style.width = '0';
+        });
+    }
+    
+    // Add form submit event - تعديل هنا لاستخدام التحميل البسيط بدلاً من المتقدم
+    const searchForm = document.getElementById('search-form');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    
+    if (searchForm && loadingIndicator) {
+        searchForm.addEventListener('submit', function(e) {
+            // Validate the form inputs first
+            const queryInput = this.querySelector('input[name="query"]');
+            
+            if (queryInput.value.trim() !== '') {
+                // Prevent immediate form submission to show loading effect
+                e.preventDefault();
+                
+                // Hide search form
+                this.style.opacity = '0.3';
+                this.style.pointerEvents = 'none';
+                
+                // Show loading animation (الأنيميشن البسيط مثل التيليجرام)
+                loadingIndicator.style.display = 'block';
+                
+                // Submit the form after a short delay to show the animation
+                setTimeout(() => {
+                    this.submit();
+                }, 800);
+                
+                return false;
+            }
+        });
+    }
+    
+    // Smooth scrolling when clicking on the CTA button
+    const ctaButton = document.querySelector('.hero-cta');
+    if (ctaButton) {
+        ctaButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    }
+
+    // Fallback animation if particles.js is not available
+    function createFallbackParticles() {
+        const particlesContainer = document.getElementById('particles-js');
+        if (!particlesContainer) return;
+        
+        // Create 50 particles
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'fallback-particle';
+            
+            // Random position
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            
+            // Random size (1-4px)
+            const size = Math.random() * 3 + 1;
+            
+            // Random animation duration (5-15s)
+            const duration = Math.random() * 10 + 5;
+            
+            // Random opacity (0.1-0.5)
+            const opacity = Math.random() * 0.4 + 0.1;
+            
+            // Set styles
+            particle.style.cssText = `
+                position: absolute;
+                left: ${left}%;
+                top: ${top}%;
+                width: ${size}px;
+                height: ${size}px;
+                background-color: #5682a3;
+                border-radius: 50%;
+                opacity: ${opacity};
+                animation: float ${duration}s infinite linear;
+            `;
+            
+            // Add to container
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Add style for animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0); }
+                25% { transform: translate(10px, 10px); }
+                50% { transform: translate(0, 20px); }
+                75% { transform: translate(-10px, 10px); }
+                100% { transform: translate(0, 0); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Initialize particles
+    if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#5682a3"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#5682a3",
+                    "opacity": 0.2,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 0.6
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    } else {
+        console.log("particles.js not loaded - falling back to simpler animation");
+        createFallbackParticles();
+    }
+    
+    // Add functionality to action buttons (for demonstration only)
+    const actionButtons = document.querySelectorAll('.action-button');
+    if (actionButtons) {
+        actionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // This is just for demonstration
+                alert('This feature would be implemented in a production environment.');
+            });
+        });
+    }
+});
+</script>
+
+{% endblock %}

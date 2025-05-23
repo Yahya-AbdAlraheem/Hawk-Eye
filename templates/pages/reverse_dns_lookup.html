@@ -1,0 +1,2135 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+{% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reverse DNS Lookup - Hawk Eye</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #0f0f0f;
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Enhanced Hero Section Styles */
+    .hero-section {
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(17, 27, 33, 0.95) 100%), url('{% static "images/cyber-bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cyber-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(79, 125, 201, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(79, 125, 201, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+    }
+
+    .scanner-beam {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #3a6d99, transparent);
+        z-index: 1;
+        animation: scan 4s infinite;
+        opacity: 0.5;
+        box-shadow: 0 0 20px #3a6d99;
+    }
+
+    .hero-content {
+        text-align: center;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        max-width: 1200px;
+        padding: 0 20px;
+        animation: fadeIn 1.2s ease-out;
+    }
+
+    .hero-header {
+        margin-bottom: 40px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-container img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #3a6d99;
+        box-shadow: 0 0 25px rgba(79, 125, 201, 0.8);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .logo-container img:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 0 30px rgba(79, 125, 201, 1);
+    }
+
+    .logo-pulse {
+        animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    .title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 25px;
+    }
+
+    #project-name {
+        font-size: 52px;
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        text-shadow: 0 0 15px rgba(79, 125, 201, 0.7);
+        letter-spacing: 3px;
+        transition: all 0.3s ease;
+        background: linear-gradient(to right, #fff, #5682a3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: textShine 3s ease-in-out infinite alternate;
+        text-decoration: none;
+    }
+
+    .subtitle-line {
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(90deg, #5682a3, transparent);
+        margin: 8px 0;
+    }
+
+    .project-tagline {
+        font-size: 20px;
+        color: #5682a3;
+        font-weight: 300;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+
+    .hero-description {
+        margin-bottom: 40px;
+        max-width: 800px;
+    }
+
+    .hero-subtitle {
+        font-size: 22px;
+        line-height: 1.6;
+        color: #e6e6e6;
+        font-weight: 300;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 30px;
+    }
+
+    .hero-features {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .feature {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .feature:hover {
+        transform: translateY(-5px);
+    }
+
+    .feature i {
+        font-size: 24px;
+        color: #5682a3;
+        background: rgba(17, 27, 33, 0.5);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        box-shadow: 0 0 15px rgba(79, 125, 201, 0.2);
+    }
+
+    .feature span {
+        font-size: 16px;
+        color: #d6d6d6;
+        font-weight: 400;
+    }
+
+    .hero-action {
+        margin-top: 20px;
+    }
+
+    .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 16px 36px;
+        background: linear-gradient(135deg, #5682a3, #3a6d99);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 0 20px rgba(79, 125, 201, 0.3);
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .hero-cta:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .hero-cta:hover:before {
+        left: 100%;
+    }
+
+    .hero-cta:hover {
+        background: linear-gradient(135deg, #4a7499, #2c5277);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 25px rgba(79, 125, 201, 0.5);
+    }
+
+    .hero-cta:active {
+        transform: translateY(-1px);
+    }
+
+    .hero-cta i {
+        transition: transform 0.3s ease;
+    }
+
+    .hero-cta:hover i {
+        transform: translateX(5px);
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeInUp 1.5s ease-out 0.5s forwards;
+        opacity: 0;
+    }
+
+    .mouse {
+        width: 30px;
+        height: 50px;
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        border-radius: 20px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    .wheel {
+        width: 6px;
+        height: 6px;
+        background-color: #5682a3;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: scrollWheel 2s infinite;
+    }
+
+    .arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .arrow span {
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-bottom: 2px solid #5682a3;
+        border-right: 2px solid #5682a3;
+        transform: rotate(45deg);
+        animation: arrowDown 2s infinite;
+    }
+
+    .arrow span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .arrow span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    /* Main Content Area */
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 70px 0;
+        background-color: #0f0f0f;
+        position: relative;
+    }
+
+    .main-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, #000000, transparent);
+        z-index: 1;
+    }
+
+    /* Enhanced Search Box */
+    .cyber-accent-top, .cyber-accent-bottom {
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, #3a6d99 50%, transparent 100%);
+        position: relative;
+        margin: -70px 0;
+    }
+    
+    .cyber-accent-bottom {
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, #3a6d99 50%, transparent 100%);
+        position: relative;
+        margin-top: 5px 0;
+    }
+
+    .cyber-accent-top:before, .cyber-accent-bottom:before {
+        content: '';
+        position: absolute;
+        width: 30%;
+        height: 1px;
+        background: #5682a3;
+        top: -5px;
+        left: 35%;
+        box-shadow: 0 0 10px #3a6d99;
+    }
+
+    .cyber-accent-bottom:before {
+        top: auto;
+        bottom: -5px;
+    }
+
+    .search-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 900px;
+        position: relative;
+        margin-bottom: 20px;
+        z-index: 2;
+        transform: scale(0.9); 
+        transform-origin: top center; 
+    }
+
+    .search-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .search-header-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: rgba(58, 109, 153, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        position: relative;
+        border: 1px solid rgba(86, 130, 163, 0.4);
+    }
+
+    .search-header-icon i {
+        font-size: 24px;
+        color: #5682a3;
+    }
+
+    .search-header-icon:before {
+        content: '';
+        position: absolute;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: 1px dashed rgba(86, 130, 163, 0.4);
+        animation: rotate 20s linear infinite;
+    }
+
+    .search-header h2 {
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 32px;
+        color: #5682a3;
+        margin-bottom: 15px;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(58, 109, 153, 0.3);
+    }
+
+    .search-header-line {
+        width: 120px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #5682a3, transparent);
+        margin-bottom: 15px;
+    }
+
+    .search-subheader {
+        font-size: 16px;
+        color: #d6d6d6;
+        max-width: 500px;
+        opacity: 0.8;
+    }
+
+    .search-box {
+        width: 100%;
+        max-width: 600px;
+        padding: 6px;
+        position: relative;
+        background: linear-gradient(145deg, rgba(13, 20, 28, 0.9), rgba(25, 35, 45, 0.85));
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(58, 109, 153, 0.2);
+        margin: 30px 0 70px;
+        z-index: 2;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .search-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(79, 125, 201, 0.25);
+    }
+
+    .search-box-cyber-corner {
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        border-color: #5682a3;
+        z-index: 1;
+    }
+
+    .top-left {
+        top: 0;
+        left: 0;
+        border-top: 2px solid;
+        border-left: 2px solid;
+        border-top-left-radius: 8px;
+    }
+
+    .top-right {
+        top: 0;
+        right: 0;
+        border-top: 2px solid;
+        border-right: 2px solid;
+        border-top-right-radius: 8px;
+    }
+
+    .bottom-left {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid;
+        border-left: 2px solid;
+        border-bottom-left-radius: 8px;
+    }
+
+    .bottom-right {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid;
+        border-right: 2px solid;
+        border-bottom-right-radius: 8px;
+    }
+
+    .search-box-inner {
+        background-color: rgba(13, 20, 28, 0.8);
+        border-radius: 12px;
+        padding: 40px;
+        position: relative;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(58, 109, 153, 0.2);
+        overflow: hidden;
+    }
+
+    .search-box-inner:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at top right, rgba(58, 109, 153, 0.15), transparent 70%);
+        pointer-events: none;
+    }
+
+    .search-icon-container {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-pulse-ring {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid rgba(58, 109, 153, 0.3);
+        animation: pulse-ring 2s infinite;
+    }
+
+    .search-icon-container i {
+        font-size: 28px;
+        color: rgba(58, 109, 153, 0.6);
+        animation: pulse-icon 2s infinite alternate;
+    }
+
+    .search-box h3 {
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 24px;
+        color: #5682a3;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+    }
+
+    .access-tag {
+        font-size: 12px;
+        background-color: rgba(58, 109, 153, 0.2);
+        color: #5682a3;
+        padding: 5px 10px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+        margin-left: 15px;
+        position: relative;
+        top: -2px;
+        border: 1px solid rgba(86, 130, 163, 0.3);
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .input-group i {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #5682a3;
+        font-size: 18px;
+        z-index: 2;
+    }
+
+    .search-box input[type="text"] {
+        width: 100%;
+        padding: 18px 20px 18px 50px;
+        background: rgba(17, 27, 33, 0.7);
+        border: 1px solid rgba(58, 109, 153, 0.3);
+        color: white;
+        font-size: 16px;
+        border-radius: 8px;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .search-box input[type="text"]:focus {
+        outline: none;
+        border-color: #5682a3;
+        box-shadow: 0 0 15px rgba(58, 109, 153, 0.3), inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-box input[type="text"]::placeholder {
+        color: rgba(222, 222, 222, 0.4);
+    }
+
+    .input-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 2px;
+        width: 0;
+        background: linear-gradient(90deg, #3a6d99, #5682a3);
+        transition: width 0.3s ease;
+    }
+
+    .search-box input[type="text"]:focus + .input-indicator {
+        width: 100%;
+    }
+
+    .search-box button {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #3a6d99, #5682a3);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 16px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .button-text {
+        position: relative;
+        z-index: 2;
+    }
+
+    .search-box button i {
+        font-size: 18px;
+        position: relative;
+        z-index: 2;
+        transition: transform 0.3s ease;
+    }
+
+    .button-hover-effect {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+        z-index: 1;
+    }
+
+    .search-box button:hover {
+        background: linear-gradient(135deg, #336b9b, #4e7ea0);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-box button:hover i {
+        transform: translateX(5px);
+    }
+
+    .search-box button:hover .button-hover-effect {
+        left: 100%;
+    }
+
+    /* Error Message */
+    .error-message {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 20px;
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid rgba(255, 107, 107, 0.3);
+        border-radius: 10px;
+        margin: 10px 0 90px 0;
+        width: 90%;
+        max-width: 900px;
+    }
+
+    .error-icon {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        border-radius: 50%;
+        background: rgba(255, 107, 107, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .error-icon i {
+        color: #ff6b6b;
+        font-size: 20px;
+    }
+
+    .error-content h4 {
+        color: #ff6b6b;
+        margin-bottom: 5px;
+        font-size: 18px;
+    }
+
+    .error-content p {
+        color: #e6e6e6;
+        font-size: 15px;
+    }
+
+    /* Enhanced Results Section */
+    .result-wrapper {
+        width: 90%;
+        max-width: 900px;
+        margin: 20px 0;
+        animation: fadeIn 1s ease-in;
+    }
+
+    .result-box {
+        background-color: rgba(17, 27, 33, 0.8);
+        padding: 25px;
+        border-radius: 15px;
+        width: 100%;
+        box-shadow: 0 0 25px rgba(79, 125, 201, 0.15);
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        backdrop-filter: blur(10px);
+        margin-bottom: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .result-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0 30px rgba(79, 125, 201, 0.25);
+    }
+
+    .result-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(58, 75, 92, 0.5);
+    }
+
+    .result-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Orbitron', sans-serif;
+        letter-spacing: 1px;
+        color: #5682a3;
+        font-weight: bold;
+        font-size: 22px;
+    }
+
+    .result-title i {
+        flex-shrink: 0;
+    }
+
+    .ip-address {
+        color: white;
+        margin-left: 10px;
+    }
+
+    .record-item {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(58, 75, 92, 0.3);
+    }
+
+    .record-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #5682a3;
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .label i {
+        margin-right: 10px;
+        width: 16px;
+        text-align: center;
+    }
+
+    .value {
+        margin-top: 5px;
+        color: #d6d6d6;
+        font-size: 15px;
+        word-wrap: break-word;
+        line-height: 1.6;
+        padding-left: 10px;
+        border-left: 3px solid rgba(79, 125, 201, 0.3);
+    }
+
+    .value a {
+        color: #8ab4f8;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        word-break: break-all;
+    }
+
+    .value a:hover {
+        color: #5682a3;
+        text-decoration: underline;
+    }
+
+    /* Location Section Enhancements */
+    .location-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        background: rgba(58, 109, 153, 0.1);
+        border-radius: 10px;
+        border: 1px solid rgba(58, 109, 153, 0.2);
+        margin-top: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .location-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    .location-header:hover {
+        background: rgba(58, 109, 153, 0.15);
+    }
+
+    .location-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        color: #d6d6d6;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .location-toggle:hover {
+        color: #fff;
+    }
+
+    .location-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(58, 109, 153, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 5px;
+        border: 1px solid rgba(58, 109, 153, 0.3);
+    }
+
+    .location-icon i {
+        color: #5682a3;
+        font-size: 16px;
+    }
+
+    .triangle {
+        transition: transform 0.3s ease;
+        color: #5682a3;
+    }
+
+    .location-toggle.open .triangle {
+        transform: rotate(180deg);
+    }
+
+    .location-text {
+        flex: 1;
+    }
+
+    .map-container {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.3s ease;
+        width: 100%;
+        border-radius: 8px;
+        border: 1px solid rgba(58, 109, 153, 0.3);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        margin-top: 10px;
+    }
+
+    .map-container.open {
+        height: 300px;
+    }
+
+    .map-container iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 8px;
+    }
+
+    /* Reports Section Enhancements */
+    .report-section {
+        background: rgba(17, 27, 33, 0.6);
+        border-radius: 10px;
+        padding: 15px;
+        margin-top: 10px;
+        border: 1px solid rgba(58, 109, 153, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .report-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .report-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(58, 109, 153, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(58, 109, 153, 0.3);
+    }
+
+    .report-icon i {
+        color: #5682a3;
+        font-size: 16px;
+    }
+
+    .report-title {
+        font-weight: 600;
+        color: #e6e6e6;
+        font-size: 15px;
+    }
+
+    .report-count {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+
+    .report-counter {
+        position: relative;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 10px;
+        z-index: 1;
+    }
+
+    .counter-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border-radius: 18px;
+        z-index: -1;
+        transition: width 1.5s ease-out;
+    }
+
+    .counter-text {
+        padding: 0 15px;
+        font-weight: 700;
+        font-size: 16px;
+        white-space: nowrap;
+        z-index: 1;
+    }
+
+    .counter-status {
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-left: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+    }
+
+    .status-secure {
+        background-color: rgba(0, 224, 161, 0.15);
+        color: #00e0a1;
+        border: 1px solid rgba(0, 224, 161, 0.3);
+    }
+
+    .status-moderate {
+        background-color: rgba(240, 173, 78, 0.15);
+        color: #f0ad4e;
+        border: 1px solid rgba(240, 173, 78, 0.3);
+    }
+
+    .status-danger {
+        background-color: rgba(217, 83, 79, 0.15);
+        color: #d9534f;
+        border: 1px solid rgba(217, 83, 79, 0.3);
+    }
+
+    .low-bar {
+        background: linear-gradient(90deg, rgba(0, 224, 161, 0.3), rgba(0, 224, 161, 0.1));
+        box-shadow: 0 0 10px rgba(0, 224, 161, 0.2);
+    }
+
+    .moderate-bar {
+        background: linear-gradient(90deg, rgba(240, 173, 78, 0.3), rgba(240, 173, 78, 0.1));
+        box-shadow: 0 0 10px rgba(240, 173, 78, 0.2);
+    }
+
+    .high-bar {
+        background: linear-gradient(90deg, rgba(217, 83, 79, 0.3), rgba(217, 83, 79, 0.1));
+        box-shadow: 0 0 10px rgba(217, 83, 79, 0.2);
+    }
+
+    /* Download Button */
+    .download-btn {
+        margin-top: 10px;
+        margin-bottom: 25px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .download-link {
+        padding: 14px 24px;
+        background: linear-gradient(135deg, #5682a3, #3a6d99);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        box-shadow: 0 0 15px rgba(79, 125, 201, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .download-link i {
+        margin-right: 10px;
+        font-size: 18px;
+    }
+
+    .download-link:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .download-link:hover:before {
+        left: 100%;
+    }
+
+    .download-link:hover {
+        background: linear-gradient(135deg, #4a7499, #2c5277);
+        transform: translateY(-3px);
+        box-shadow: 0 0 20px rgba(79, 125, 201, 0.7);
+    }
+
+    /* Enhanced Loading Animation */
+    .loading-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        animation: fadeIn 0.5s ease;
+        z-index: 20;
+        display: none;
+    }
+
+    .cyber-loader {
+        background-color: rgba(15, 25, 35, 0.85);
+        border-radius: 10px;
+        border: 1px solid rgba(79, 125, 201, 0.5);
+        padding: 30px;
+        box-shadow: 0 0 30px rgba(79, 125, 201, 0.3);
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+
+    /* Scanner beam effect */
+    .cyber-loader .scanner-beam {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(86, 130, 163, 0.1), 
+            rgba(86, 130, 163, 0.6), 
+            rgba(138, 180, 248, 0.8), 
+            rgba(138, 180, 248, 1), 
+            rgba(138, 180, 248, 0.8), 
+            rgba(86, 130, 163, 0.6), 
+            rgba(86, 130, 163, 0.1), 
+            transparent);
+        box-shadow: 0 0 15px rgba(138, 180, 248, 0.8);
+        animation: scanning 2s linear infinite;
+        z-index: 5;
+    }
+
+    /* Hexagon loader */
+    .hexagon-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80px;
+        margin: 20px 0;
+        position: relative;
+    }
+
+    .hexagon {
+        position: absolute;
+        width: 60px;
+        height: 35px;
+        background-color: rgba(58, 109, 153, 0.2);
+        margin: 0 auto;
+        border-radius: 5px;
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        box-shadow: 0 0 10px rgba(79, 125, 201, 0.3);
+        transform-origin: center;
+    }
+
+    .hexagon:before,
+    .hexagon:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+    }
+
+    .hexagon:before {
+        top: -18px;
+        border-bottom: 18px solid rgba(58, 109, 153, 0.2);
+    }
+
+    .hexagon:after {
+        bottom: -18px;
+        border-top: 18px solid rgba(58, 109, 153, 0.2);
+    }
+
+    .hex1 {
+        animation: pulse 2s infinite, rotate 6s linear infinite;
+        z-index: 3;
+    }
+
+    .hex2 {
+        transform: scale(0.8);
+        animation: pulse-inverse 2s infinite, rotate-reverse 8s linear infinite;
+        z-index: 2;
+    }
+
+    .hex3 {
+        transform: scale(1.2);
+        opacity: 0.3;
+        animation: pulse 3s infinite, rotate 10s linear infinite;
+        z-index: 1;
+    }
+
+    /* Animated loading text */
+    .loading-text {
+        text-align: center;
+        margin: 15px 0;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 20px;
+        color: #5682a3;
+        font-weight: bold;
+        letter-spacing: 2px;
+        display: flex;
+        justify-content: center;
+        text-shadow: 0 0 8px rgba(79, 125, 201, 0.5);
+    }
+
+    .letter {
+        animation: glow 1.5s linear infinite;
+        animation-delay: calc(0.1s * var(--i));
+    }
+
+    /* Progress bar */
+    .progress-bar {
+        width: 100%;
+        height: 4px;
+        background-color: rgba(58, 109, 153, 0.2);
+        border-radius: 2px;
+        margin-top: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #3a6d99, #5682a3, #8ab4f8);
+        animation: progress 3s infinite ease-in-out;
+        box-shadow: 0 0 8px rgba(79, 125, 201, 0.7);
+    }
+
+    /* Matrix Rain */
+    .matrix-rain {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.2;
+    }
+
+    /* Animations */
+    @keyframes scan {
+        0% { top: 0%; }
+        100% { top: 100%; }
+    }
+
+    @keyframes scanning {
+        0% { top: 0; }
+        50% { top: calc(100% - 2px); }
+        100% { top: 0; }
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        100% { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    @keyframes scrollWheel {
+        0% { opacity: 1; top: 10px; }
+        100% { opacity: 0; top: 30px; }
+    }
+
+    @keyframes arrowDown {
+        0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+        50% { opacity: 1; }
+        100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+    }
+
+    @keyframes textShine {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+        50% { transform: scale(1.05); border-color: rgba(79, 125, 201, 0.7); }
+        100% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+    }
+
+    @keyframes pulse-inverse {
+        0% { transform: scale(0.8); border-color: rgba(79, 125, 201, 0.7); }
+        50% { transform: scale(0.75); border-color: rgba(79, 125, 201, 0.3); }
+        100% { transform: scale(0.8); border-color: rgba(79, 125, 201, 0.7); }
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-reverse {
+        0% { transform: scale(0.8) rotate(0deg); }
+        100% { transform: scale(0.8) rotate(-360deg); }
+    }
+
+    @keyframes glow {
+        0% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+        20% { text-shadow: 0 0 15px rgba(138, 180, 248, 0.8); opacity: 1; }
+        40% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+        100% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+    }
+
+    @keyframes progress {
+        0% { width: 0%; }
+        20% { width: 20%; }
+        40% { width: 40%; }
+        60% { width: 65%; }
+        80% { width: 85%; }
+        100% { width: 100%; }
+    }
+
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(0.8);
+            opacity: 0.3;
+        }
+        50% {
+            opacity: 0.6;
+        }
+        100% {
+            transform: scale(1.1);
+            opacity: 0.1;
+        }
+    }
+
+    @keyframes pulse-icon {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.15);
+        }
+    }
+
+    .rotate-icon {
+        transform: rotate(90deg);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .logo-container {
+            flex-direction: column;
+        }
+        
+        #project-name {
+            margin-left: 0;
+            margin-top: 15px;
+            font-size: 36px;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+        }
+        
+        .result-box {
+            padding: 20px;
+        }
+        
+        .logo-container img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .message-detail-value img {
+            max-width: 100%;
+        }
+        
+        .result-title {
+            font-size: 18px;
+        }
+
+        .search-box-inner {
+            padding: 30px 20px;
+        }
+        
+        .search-icon-container {
+            display: none;
+        }
+
+        .location-section,
+        .report-section {
+            padding: 10px;
+        }
+        
+        .map-container.open {
+            height: 200px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .search-header h2 {
+            font-size: 24px;
+        }
+        
+        .search-box h3 {
+            font-size: 20px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .access-tag {
+            margin-left: 0;
+        }
+        
+        .search-subheader {
+            font-size: 14px;
+        }
+        
+        .search-box input[type="text"] {
+            padding: 15px 15px 15px 45px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            padding: 14px;
+            font-size: 14px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+        }
+
+        .hero-cta {
+            padding: 14px 28px;
+            font-size: 16px;
+        }
+
+        .counter-text,
+        .counter-status {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+    }
+    /* Animations */
+    @keyframes scan {
+        0% { top: 0%; }
+        100% { top: 100%; }
+    }
+
+    @keyframes scanning {
+        0% { top: 0; }
+        50% { top: calc(100% - 2px); }
+        100% { top: 0; }
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        100% { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    @keyframes scrollWheel {
+        0% { opacity: 1; top: 10px; }
+        100% { opacity: 0; top: 30px; }
+    }
+
+    @keyframes arrowDown {
+        0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+        50% { opacity: 1; }
+        100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+    }
+
+    @keyframes textShine {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+        50% { transform: scale(1.05); border-color: rgba(79, 125, 201, 0.7); }
+        100% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+    }
+
+    @keyframes pulse-inverse {
+        0% { transform: scale(0.8); border-color: rgba(79, 125, 201, 0.7); }
+        50% { transform: scale(0.75); border-color: rgba(79, 125, 201, 0.3); }
+        100% { transform: scale(0.8); border-color: rgba(79, 125, 201, 0.7); }
+    }
+
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-reverse {
+        0% { transform: scale(0.8) rotate(0deg); }
+        100% { transform: scale(0.8) rotate(-360deg); }
+    }
+
+    @keyframes glow {
+        0% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+        20% { text-shadow: 0 0 15px rgba(138, 180, 248, 0.8); opacity: 1; }
+        40% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+        100% { text-shadow: 0 0 8px rgba(79, 125, 201, 0.3); opacity: 0.5; }
+    }
+
+    @keyframes progress {
+        0% { width: 0%; }
+        20% { width: 20%; }
+        40% { width: 40%; }
+        60% { width: 65%; }
+        80% { width: 85%; }
+        100% { width: 100%; }
+    }
+
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(0.8);
+            opacity: 0.3;
+        }
+        50% {
+            opacity: 0.6;
+        }
+        100% {
+            transform: scale(1.1);
+            opacity: 0.1;
+        }
+    }
+
+    @keyframes pulse-icon {
+        0% {
+            transform: scale(1);
+        }
+        100% {
+            transform: scale(1.15);
+        }
+    }
+
+    .rotate-icon {
+        transform: rotate(90deg);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .logo-container {
+            flex-direction: column;
+        }
+        
+        #project-name {
+            margin-left: 0;
+            margin-top: 15px;
+            font-size: 36px;
+        }
+        
+        .hero-subtitle {
+            font-size: 20px;
+        }
+        
+        .result-box {
+            padding: 20px;
+        }
+        
+        .logo-container img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .message-detail-value img {
+            max-width: 100%;
+        }
+        
+        .result-title {
+            font-size: 18px;
+        }
+
+        .search-box-inner {
+            padding: 30px 20px;
+        }
+        
+        .search-icon-container {
+            display: none;
+        }
+
+        .location-section,
+        .report-section {
+            padding: 10px;
+        }
+        
+        .map-container.open {
+            height: 200px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .search-header h2 {
+            font-size: 24px;
+        }
+        
+        .search-box h3 {
+            font-size: 20px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .access-tag {
+            margin-left: 0;
+        }
+        
+        .search-subheader {
+            font-size: 14px;
+        }
+        
+        .search-box input[type="text"] {
+            padding: 15px 15px 15px 45px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            padding: 14px;
+            font-size: 14px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+        }
+
+        .hero-cta {
+            padding: 14px 28px;
+            font-size: 16px;
+        }
+
+        .counter-text,
+        .counter-status {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+    }
+
+    .coordinates-info {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+        padding: 10px;
+        background: rgba(17, 27, 33, 0.4);
+        border-radius: 8px;
+        border: 1px solid rgba(79, 125, 201, 0.2);
+    }
+    
+    .coordinate-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 5px 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    
+    .coordinate-item:hover {
+        background: rgba(58, 109, 153, 0.15);
+    }
+    
+    .coordinate-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(58, 109, 153, 0.2);
+        border: 1px solid rgba(79, 125, 201, 0.3);
+    }
+    
+    .coordinate-icon i {
+        color: #5682a3;
+        font-size: 14px;
+    }
+    
+    .coordinate-detail {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .coordinate-label {
+        font-size: 12px;
+        color: #5682a3;
+        font-weight: 600;
+    }
+    
+    .coordinate-value {
+        font-size: 14px;
+        color: #e6e6e6;
+    }
+    
+    @media (max-width: 600px) {
+        .coordinates-info {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="cyber-grid"></div>
+    <div class="scanner-beam"></div>
+    <div class="hero-content">
+        <div class="hero-header">
+            <div class="logo-container">
+                <a href="{% url 'WelcomePage' %}">
+                    <img src="{% static 'images/Hawk_logo.jpg' %}" alt="Hawk Logo" class="logo-pulse">
+                </a>
+                <div class="title-container">
+                    <h1><a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a></h1>
+                    <div class="subtitle-line"></div>
+                    <p class="project-tagline">Domain Intelligence System</p>
+                </div>
+            </div>
+        </div>
+        <div class="hero-description">
+            <p class="hero-subtitle">Reverse DNS Lookup - IP Address Analysis & Threat Intelligence</p>
+            <div class="hero-features">
+                <div class="feature">
+                    <i class="fas fa-undo"></i>
+                    <span>Reverse DNS</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>IP Geolocation</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Threat Assessment</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-action">
+            <a href="#search-section" class="hero-cta">
+                <span>Start IP Lookup</span>
+                <i class="fas fa-angle-right"></i>
+            </a>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <div class="arrow">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content" id="search-section">
+    <div class="cyber-accent-top"></div>
+
+    <div class="search-container">
+        <div class="search-header">
+            <div class="search-header-icon">
+                <i class="fas fa-undo"></i>
+            </div>
+            <h2>REVERSE DNS LOOKUP</h2>
+            <div class="search-header-line"></div>
+            <p class="search-subheader">Analyze IP Addresses For Domain Intelligence & Threat Assessment</p>
+        </div>
+    
+        <div class="search-box">
+            <div class="search-box-cyber-corner top-left"></div>
+            <div class="search-box-cyber-corner top-right"></div>
+            <div class="search-box-cyber-corner bottom-left"></div>
+            <div class="search-box-cyber-corner bottom-right"></div>
+            
+            <div class="search-box-inner">
+                <div class="search-icon-container">
+                    <div class="search-pulse-ring"></div>
+                    <i class="fas fa-search"></i>
+                </div>
+                
+                <h3>IP Address Analysis <span class="access-tag">LOOKUP</span></h3>
+                
+                <form method="post" action="{% url 'reverse_dns_lookup' %}#search-section">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <i class="fas fa-network-wired"></i>
+                        <input type="text" name="ip_address" placeholder="Enter IP Address (e.g., 8.8.8.8)" value="{{ ip_address }}" required>
+                        <span class="input-indicator"></span>
+                    </div>
+                    
+                    <button type="submit">
+                        <span class="button-text">INITIATE IP LOOKUP</span> 
+                        <i class="fas fa-angle-right"></i>
+                        <span class="button-hover-effect"></span>
+                    </button>
+                </form>
+                <div id="loading-indicator" class="loading-container">
+                    <div class="cyber-loader">
+                        <div class="scanner-beam"></div>
+                        <div class="hexagon-container">
+                            <div class="hexagon hex1"></div>
+                            <div class="hexagon hex2"></div>
+                            <div class="hexagon hex3"></div>
+                        </div>
+                        <div class="loading-text">
+                            <span class="letter" style="--i:1">S</span>
+                            <span class="letter" style="--i:2">C</span>
+                            <span class="letter" style="--i:3">A</span>
+                            <span class="letter" style="--i:4">N</span>
+                            <span class="letter" style="--i:5">N</span>
+                            <span class="letter" style="--i:6">I</span>
+                            <span class="letter" style="--i:7">N</span>
+                            <span class="letter" style="--i:8">G</span>
+                            <span class="letter" style="--i:9">.</span>
+                            <span class="letter" style="--i:10">.</span>
+                            <span class="letter" style="--i:11">.</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if error_message %}
+        <div class="error-message">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="error-content">
+                <h4>Lookup Error Detected</h4>
+                <p>{{ error_message }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if ip_address %}
+    <div class="result-wrapper">
+        <div class="result-box">
+            <div class="result-header">
+                <div class="result-title">
+                    <i class="fas fa-network-wired"></i>
+                    IP Analysis Results: <span class="ip-address">{{ ip_address }}</span>
+                </div>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-globe"></i> Host Name:</span>
+                <span class="value">
+                    {% if hostname %}
+                        {{ hostname }}
+                    {% else %}
+                        No hostname found
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-building"></i> Organization:</span>
+                <span class="value">{{ org }}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-rss"></i> Internet Service Provider (ISP):</span>
+                <span class="value">{{ isp }}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-server"></i> Autonomous System Number (ASN):</span>
+                <span class="value">
+                    {{ asn }} {% if asn_description %}({{ asn_description }}){% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-clock"></i> Time To Live (TTL):</span>
+                <span class="value">
+                    {% if ttl %}
+                        {{ ttl }}
+                    {% else %}
+                        Not Found
+                    {% endif %}
+                </span>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-shield-alt"></i> Abuse Confidence Score:</span>
+                <span class="value">{{ abuse_confidence }}</span>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-exclamation-triangle"></i> Total Reports (During The Past 90 Days):</span>
+                <div class="value">
+                    <div class="report-section">
+                        <div class="report-heading">
+                            <div class="report-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <span class="report-title">Reported Activity Analysis</span>
+                        </div>
+                        <div class="report-count">
+                            <div class="report-counter">
+                                {% if total_reports < 5 %}
+                                    <div class="counter-bar low-bar" style="width: {{ total_reports|default:0|add:5 }}%;"></div>
+                                    <span class="counter-text">{{ total_reports|default:0 }}</span>
+                                    <span class="counter-status status-secure">RARELY REPORTED</span>
+                                {% elif total_reports < 15 %}
+                                    <div class="counter-bar moderate-bar" style="width: {{ total_reports|default:0|add:15 }}%;"></div>
+                                    <span class="counter-text">{{ total_reports|default:0 }}</span>
+                                    <span class="counter-status status-moderate">MODERATELY REPORTED</span>
+                                {% else %}
+                                    <div class="counter-bar high-bar" style="width: {{ total_reports|default:0|add:5 }}%;"></div>
+                                    <span class="counter-text">{{ total_reports|default:0 }}</span>
+                                    <span class="counter-status status-danger">FREQUENTLY REPORTED</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="record-item">
+                <span class="label"><i class="fas fa-map-marker-alt"></i> Location:</span>
+                <div class="value">
+                    <div class="location-section">
+                        <div class="location-header">
+                            <span class="location-toggle" onclick="toggleMap(this)">
+                                <div class="location-icon">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <span class="location-text">{{ location }}</span>
+                                <span class="triangle">▼</span>
+                            </span>
+                        </div>
+                        
+                        <!-- إضافة معلومات الإحداثيات -->
+                        <div class="coordinates-info">
+                            <div class="coordinate-item">
+                                <div class="coordinate-icon">
+                                    <i class="fas fa-arrows-alt-h"></i>
+                                </div>
+                                <div class="coordinate-detail">
+                                    <span class="coordinate-label">Longitude:</span>
+                                    <span class="coordinate-value">{{ location_lon }}</span>
+                                </div>
+                            </div>
+                            <div class="coordinate-item">
+                                <div class="coordinate-icon">
+                                    <i class="fas fa-arrows-alt-v"></i>
+                                </div>
+                                <div class="coordinate-detail">
+                                    <span class="coordinate-label">Latitude:</span>
+                                    <span class="coordinate-value">{{ location_lat }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="map-container">
+                            {% if location_lat != '0' and location_lon != '0' %}
+                                <iframe src="https://maps.google.com/maps?q={{ location_lat }},{{ location_lon }}&z=12&output=embed"></iframe>
+                            {% else %}
+                                <iframe src="https://maps.google.com/maps?q={{ location }}&output=embed"></iframe>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="download-btn">
+                <a href="{% url 'download_pdf' ip_address %}" class="download-link">
+                    <i class="fas fa-download"></i> Download PDF Report
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="cyber-accent-bottom"></div>
+</div>
+
+<!-- Matrix Rain Canvas -->
+<canvas id="matrix-rain" class="matrix-rain"></canvas>
+
+<script>
+    // Smooth scrolling for CTA button
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctaButton = document.querySelector('.hero-cta');
+        if (ctaButton) {
+            ctaButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+        
+        // Form input focus effect
+        const searchInputs = document.querySelectorAll('.search-box input[type="text"]');
+        if (searchInputs) {
+            searchInputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.nextElementSibling.style.width = '100%';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.nextElementSibling.style.width = '0';
+                });
+            });
+        }
+        
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+        
+        // Make canvas full screen
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        
+        // Characters to display
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const charArray = chars.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        
+        // Array for drops - one per column
+        const drops = [];
+        
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        // Draw the matrix rain
+        function draw() {
+            // Set a semi-transparent black background to create fade effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Set text color to blue
+            ctx.fillStyle = '#5682a3';
+            ctx.font = fontSize + 'px monospace';
+            
+            // Loop through drops
+            for (let i = 0; i < drops.length; i++) {
+                // Get random character
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                
+                // Draw the character
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                // If it's reached the bottom or with random chance, reset it
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                // Move the drop down
+                drops[i]++;
+            }
+        }
+        
+        // Setup animation
+        setInterval(draw, 35);
+        
+        // Resize canvas when window is resized
+        window.addEventListener('resize', function() {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+        });
+        
+        // Add form submit event
+        const searchForm = document.querySelector('.search-box form');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        
+        if (searchForm && loadingIndicator) {
+            searchForm.addEventListener('submit', function(e) {
+                // Validate the form inputs first
+                const ipInput = this.querySelector('input[name="ip_address"]');
+                
+                if (ipInput.value.trim() !== '') {
+                    // Prevent immediate form submission to show loading effect
+                    e.preventDefault();
+                    
+                    // Hide search form
+                    this.style.opacity = '0.3';
+                    this.style.pointerEvents = 'none';
+                    
+                    // Show loading animation
+                    loadingIndicator.style.display = 'block';
+                    
+                    // Submit the form after a short delay to show the animation
+                    setTimeout(() => {
+                        this.submit();
+                    }, 800);
+                    
+                    return false;
+                }
+            });
+        }
+    });
+
+    // Function to toggle map visibility
+    function toggleMap(element) {
+        const container = element.closest('.location-section');
+        const mapContainer = container.querySelector('.map-container');
+        const triangle = element.querySelector('.triangle');
+        
+        if (mapContainer.classList.contains('open')) {
+            mapContainer.classList.remove('open');
+            mapContainer.style.height = '0';
+            triangle.textContent = '▼';
+            element.classList.remove('open');
+        } else {
+            mapContainer.classList.add('open');
+            mapContainer.style.height = '300px';
+            triangle.textContent = '▲';
+            element.classList.add('open');
+            
+            // Log coordinates for debugging (optional)
+            console.log('Latitude: {{ location_lat }}, Longitude: {{ location_lon }}');
+        }
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,735 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hawk Eye - Advanced Intelligence System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #0f0f0f;
+            --secondary-color: #111111;
+            --accent-color: #151a1f;
+            --text-color: #ffffff;
+            /* Enhanced blue colors for better contrast */
+            --highlight-color: #3a6d99;
+            --highlight-glow: rgba(79, 125, 201, 0.7);
+            --highlight-bright: rgba(79, 125, 201, 0.9);
+            --highlight-alt: #5682a3;
+            --matrix-color: #5682a3;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            font-family: 'Cairo', 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Grid background for consistency with dark web page */
+        .cyber-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(79, 125, 201, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(79, 125, 201, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
+
+        /* Particle background */
+        #particle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background-color: var(--matrix-color);
+            opacity: 0.3;
+        }
+
+        /* Radar scan effect */
+        .radar-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .radar-scan {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, transparent 0%, transparent 70%, var(--highlight-color) 71%, transparent 72%);
+            animation: radar-scan 8s linear infinite;
+        }
+
+        @keyframes radar-scan {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 0.7;
+            }
+            100% {
+                width: 200%;
+                height: 200%;
+                opacity: 0;
+            }
+        }
+
+        /* Main content */
+        .main-container {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            width: 100%;
+            max-width: 1400px;
+            height: 100vh;
+            max-height: 800px;
+            position: relative;
+            z-index: 10;
+            transform: scale(0.85);
+            transform-origin: center center;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* Left side - Dashboard display */
+        .dashboard-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .circle-interface {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circular-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(79, 125, 201, 0.2);
+            box-shadow: 0 0 15px rgba(79, 125, 201, 0.1);
+        }
+
+        .ring-1 {
+            width: 100%;
+            height: 100%;
+            animation: rotate-clockwise 12s linear infinite;
+        }
+
+        .ring-2 {
+            width: 85%;
+            height: 85%;
+            animation: rotate-counterclockwise 20s linear infinite;
+        }
+
+        .ring-3 {
+            width: 70%;
+            height: 70%;
+            animation: rotate-clockwise 15s linear infinite;
+        }
+
+        @keyframes rotate-clockwise {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes rotate-counterclockwise {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+
+        .dot-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            animation: rotate-clockwise 30s linear infinite;
+        }
+
+        .interface-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--highlight-color);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--highlight-glow);
+        }
+
+        .interface-line {
+            position: absolute;
+            height: 50px;
+            width: 2px;
+            background: linear-gradient(to top, transparent, var(--highlight-color));
+        }
+
+        .logo-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--highlight-color);
+            box-shadow: 0 0 20px var(--highlight-glow);
+            animation: pulse 4s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px var(--highlight-glow); }
+            100% { box-shadow: 0 0 30px var(--highlight-bright); }
+        }
+
+        /* Right side - Content panel */
+        .content-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            position: relative;
+        }
+
+        .title {
+            font-family: 'Orbitron', 'Cairo', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin: 0 0 0.3rem;
+            background: linear-gradient(to right, #ffffff, #3a6d99);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            letter-spacing: 3px;
+            animation: textShine 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textShine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #5682a3;
+            margin-bottom: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            opacity: 0.9;
+            max-width: 500px;
+        }
+
+        .subtitle-line {
+            width: 80%;
+            height: 3px;
+            background: linear-gradient(90deg, #5682a3, transparent);
+            margin: 8px 0 15px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .feature-box {
+            background: rgba(17, 27, 33, 0.7);
+            border-radius: 8px;
+            padding: 8px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(79, 125, 201, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(79, 125, 201, 0.3);
+            border-color: rgba(79, 125, 201, 0.4);
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+            color: var(--highlight-alt);
+            margin-right: 12px;
+            width: 35px;
+            text-align: center;
+        }
+
+        .feature-content {
+            flex: 1;
+        }
+
+        .feature-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 3px;
+            color: white;
+        }
+
+        .feature-desc {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.2;
+        }
+
+        /* Data stats display */
+        .data-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.7rem 0;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--highlight-color);
+            margin-bottom: 0.1rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Action button */
+        .action-button {
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: fit-content;
+            margin-top: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .action-button:hover:before {
+            left: 100%;
+        }
+
+        .action-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--highlight-glow);
+        }
+
+        .action-button i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .action-button:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Scanner beam for added effect */
+        .scanner-beam {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #3a6d99, transparent);
+            z-index: 3;
+            animation: scan 4s infinite;
+            opacity: 0.5;
+            box-shadow: 0 0 20px #3a6d99;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; opacity: 0.3; }
+            50% { opacity: 0.7; }
+            100% { top: 100%; opacity: 0.3; }
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            z-index: 10;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .dashboard-panel {
+                padding: 1rem 0;
+            }
+            
+            .circle-interface {
+                width: 300px;
+                height: 300px;
+            }
+            
+            .logo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .content-panel {
+                padding-top: 0;
+            }
+
+            .title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .circle-interface {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-stats {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .stat-box {
+                min-width: 100px;
+                margin: 0 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .circle-interface {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .dashboard-panel, .content-panel {
+                padding: 1rem;
+            }
+
+            .feature-box {
+                padding: 10px;
+            }
+
+            .feature-icon {
+                font-size: 1.4rem;
+                margin-right: 10px;
+            }
+
+            .feature-title {
+                font-size: 0.9rem;
+            }
+
+            .feature-desc {
+                font-size: 0.75rem;
+            }
+
+            .action-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cyber grid background -->
+    <div class="cyber-grid"></div>
+    
+    <!-- Particle background -->
+    <div id="particle-container"></div>
+    
+    <!-- Radar scan effect -->
+    <div class="radar-container">
+        <div class="radar-scan"></div>
+    </div>
+    
+    <!-- Scanner beam effect -->
+    <div class="scanner-beam"></div>
+    
+    <div class="main-container">
+        <!-- Left side - Dashboard display -->
+        <div class="dashboard-panel">
+            <div class="circle-interface">
+                <!-- Circular rings -->
+                <div class="circular-ring ring-1"></div>
+                <div class="circular-ring ring-2"></div>
+                <div class="circular-ring ring-3"></div>
+                
+                <!-- Interface dots and lines -->
+                <div class="dot-container" id="dot-container"></div>
+                
+                <!-- Logo in center -->
+                <div class="logo-container">
+                    <img src="{% static 'images/Hawk_logo.jpg' %}" alt="Hawk Eye Logo" class="logo">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right side - Content panel -->
+        <div class="content-panel">
+            <h1 class="title">Hawk Eye</h1>
+            <p class="subtitle">Advanced Cyber Intelligence & Dark Web Monitoring System</p>
+            
+            <!-- Data statistics -->
+            <div class="data-stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="data-stat-1">0</div>
+                    <div class="stat-label">Dark Web Pages Indexed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="data-stat-2">0</div>
+                    <div class="stat-label">Passwords Checked</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="data-stat-3">0</div>
+                    <div class="stat-label">Domains Analyzed</div>
+                </div>
+            </div>
+            
+            <!-- Features grid -->
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe-americas"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Dark Web Search</h3>
+                        <p class="feature-desc">Advanced search capabilities to uncover information across dark web pages based on your query.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Telegram Analyzer</h3>
+                        <p class="feature-desc">Search and monitor specific Telegram channels for keywords and sensitive information.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Password Leak Check</h3>
+                        <p class="feature-desc">Verify if your password has been compromised by comparing hashes against leaked rockyou.txt databases.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Domain Intelligence</h3>
+                        <p class="feature-desc">Comprehensive domain analysis including DNS lookup, Reverse DNS, and WHOIS information.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action button -->
+            <button class="action-button" onclick="window.location.href='darkweb_lookup/'">
+                Start Investigation <i class="fas fa-arrow-circle-right"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-content">
+            © 2025 Hawk Eye Security Systems — Digging Deep for Critical Intelligence
+        </div>
+    </div>
+
+    <script>
+        // Create particles
+        const particleContainer = document.getElementById('particle-container');
+        const numParticles = 100;
+        
+        for (let i = 0; i < numParticles; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random size
+            const size = Math.random() * 3 + 1;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random opacity
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            
+            // Add custom animation
+            const speedX = Math.random() * 10 - 5;
+            const speedY = Math.random() * 10 - 5;
+            
+            // Create keyframes for floating effect
+            const keyframes = `
+            @keyframes float${i} {
+                0% { transform: translate(0, 0); }
+                50% { transform: translate(${speedX}px, ${speedY}px); }
+                100% { transform: translate(0, 0); }
+            }`;
+            
+            // Append style to head
+            const style = document.createElement('style');
+            style.textContent = keyframes;
+            document.head.appendChild(style);
+            
+            // Apply animation
+            const duration = Math.random() * 20 + 10;
+            particle.style.animation = `float${i} ${duration}s infinite ease-in-out`;
+            
+            particleContainer.appendChild(particle);
+        }
+        
+        // Create interface dots around rings
+        const dotContainer = document.getElementById('dot-container');
+        const numDots = 16;
+        
+        for (let i = 0; i < numDots; i++) {
+            // Create dots around the ring
+            const angle = (i / numDots) * Math.PI * 2;
+            const x = Math.cos(angle) * 190;
+            const y = Math.sin(angle) * 190;
+            
+            const dot = document.createElement('div');
+            dot.classList.add('interface-dot');
+            dot.style.left = `calc(50% + ${x}px)`;
+            dot.style.top = `calc(50% + ${y}px)`;
+            
+            // Pulsing effect for dots
+            dot.style.animation = `pulse ${2 + i % 4}s infinite alternate ${i * 0.2}s`;
+            
+            // Create lines extending inward
+            if (i % 3 === 0) {
+                const line = document.createElement('div');
+                line.classList.add('interface-line');
+                line.style.left = `calc(50% + ${x}px)`;
+                line.style.top = `calc(50% + ${y}px)`;
+                line.style.transform = `rotate(${angle + Math.PI/2}rad)`;
+                dotContainer.appendChild(line);
+            }
+            
+            dotContainer.appendChild(dot);
+        }
+        
+        // Animate stats counters
+        function animateCounter(id, target, duration = 2000) {
+            const element = document.getElementById(id);
+            let startTime = null;
+            const startValue = 0;
+            
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const currentValue = Math.floor(progress * (target - startValue) + startValue);
+                element.textContent = currentValue.toLocaleString();
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    element.textContent = target.toLocaleString();
+                }
+            }
+            
+            window.requestAnimationFrame(step);
+        }
+        
+        // Start animations after a delay
+        setTimeout(() => {
+            animateCounter('data-stat-1', 647);
+            animateCounter('data-stat-2', 1283);
+            animateCounter('data-stat-3', 98);
+        }, 1000);
+    </script>
+</body>
+{% endblock %}
+</html>

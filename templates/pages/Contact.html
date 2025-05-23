@@ -1,0 +1,1724 @@
+{% extends 'NavBar.html' %}
+{% load static %}
+
+{% block content %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us - Hawk Eye</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        min-height: 100vh;
+        background-color: #0f0f0f;
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+    }
+
+    /* Enhanced Hero Section Styles - متناسق مع النموذج الأول */
+    .hero-section {
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(17, 27, 33, 0.95) 100%), url('{% static "images/cyber-bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cyber-grid {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(79, 125, 201, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(79, 125, 201, 0.05) 1px, transparent 1px);
+        background-size: 50px 50px;
+        z-index: 0;
+    }
+
+    .scanner-beam {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, #3a6d99, transparent);
+        z-index: 1;
+        animation: scan 4s infinite;
+        opacity: 0.5;
+        box-shadow: 0 0 20px #3a6d99;
+    }
+
+    .hero-content {
+        text-align: center;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        max-width: 1200px;
+        padding: 0 20px;
+        animation: fadeIn 1.2s ease-out;
+    }
+
+    .hero-header {
+        margin-bottom: 40px;
+    }
+
+    .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .logo-container img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #3a6d99;
+        box-shadow: 0 0 25px rgba(79, 125, 201, 0.8);
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .logo-container img:hover {
+        transform: scale(1.05) rotate(5deg);
+        box-shadow: 0 0 30px rgba(79, 125, 201, 1);
+    }
+
+    .logo-pulse {
+        animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    .title-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin-left: 25px;
+    }
+
+    #project-name {
+        font-size: 52px;
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-weight: 700;
+        color: white;
+        margin: 0;
+        text-shadow: 0 0 15px rgba(79, 125, 201, 0.7);
+        letter-spacing: 3px;
+        transition: all 0.3s ease;
+        background: linear-gradient(to right, #fff, #5682a3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 200% auto;
+        animation: textShine 3s ease-in-out infinite alternate;
+        text-decoration: none;
+    }
+
+    .subtitle-line {
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(90deg, #5682a3, transparent);
+        margin: 8px 0;
+    }
+
+    .project-tagline {
+        font-size: 20px;
+        color: #5682a3;
+        font-weight: 300;
+        margin: 0;
+        letter-spacing: 2px;
+    }
+
+    .hero-subtitle {
+        font-size: 22px;
+        line-height: 1.6;
+        color: #e6e6e6;
+        font-weight: 300;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        margin-bottom: 30px;
+        max-width: 800px;
+    }
+
+    .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 16px 36px;
+        background: linear-gradient(135deg, #5682a3, #3a6d99);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 0 20px rgba(79, 125, 201, 0.3);
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+    }
+
+    .hero-cta:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .hero-cta:hover:before {
+        left: 100%;
+    }
+
+    .hero-cta:hover {
+        background: linear-gradient(135deg, #4a7499, #2c5277);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 25px rgba(79, 125, 201, 0.5);
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        animation: fadeInUp 1.5s ease-out 0.5s forwards;
+        opacity: 0;
+    }
+
+    .mouse {
+        width: 30px;
+        height: 50px;
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        border-radius: 20px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    .wheel {
+        width: 6px;
+        height: 6px;
+        background-color: #5682a3;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: scrollWheel 2s infinite;
+    }
+
+    .arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .arrow span {
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-bottom: 2px solid #5682a3;
+        border-right: 2px solid #5682a3;
+        transform: rotate(45deg);
+        animation: arrowDown 2s infinite;
+    }
+
+    .arrow span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .arrow span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    /* Matrix Rain */
+    .matrix-rain {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.2;
+    }
+
+    /* Main Content Area */
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 40px 0;
+        background-color: #0f0f0f;
+        position: relative;
+    }
+
+    .main-content::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, #000000, transparent);
+        z-index: 1;
+    }
+
+    /* Accent Lines */
+    .cyber-accent-top, .cyber-accent-bottom {
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, transparent 0%, #3a6d99 50%, transparent 100%);
+        position: relative;
+        margin: -40px 0 30px 0;
+    }
+    
+    .cyber-accent-bottom {
+        margin: 30px 0 -40px 0;
+    }
+
+    .cyber-accent-top:before, .cyber-accent-bottom:before {
+        content: '';
+        position: absolute;
+        width: 30%;
+        height: 1px;
+        background: #5682a3;
+        top: -5px;
+        left: 35%;
+        box-shadow: 0 0 10px #3a6d99;
+    }
+
+    .cyber-accent-bottom:before {
+        top: auto;
+        bottom: -5px;
+    }
+
+    /* Contact Section Styling */
+    .contact-section {
+        margin: 30px 0;
+        padding: 40px;
+        border: 1px solid rgba(79, 125, 201, 0.2);
+        border-radius: 12px;
+        background: rgba(17, 27, 33, 0.7);
+        backdrop-filter: blur(10px);
+        width: 90%;
+        max-width: 1200px;
+        position: relative;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+    .contact-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(79, 125, 201, 0.2);
+        border-color: rgba(79, 125, 201, 0.4);
+    }
+
+    .contact-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at top right, rgba(79, 125, 201, 0.1), transparent 70%);
+        z-index: -1;
+    }
+
+    .section-cyber-corner {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-color: #5682a3;
+        z-index: 1;
+        opacity: 0.6;
+    }
+
+    .top-left {
+        top: 0;
+        left: 0;
+        border-top: 2px solid;
+        border-left: 2px solid;
+    }
+
+    .top-right {
+        top: 0;
+        right: 0;
+        border-top: 2px solid;
+        border-right: 2px solid;
+    }
+
+    .bottom-left {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid;
+        border-left: 2px solid;
+    }
+
+    .bottom-right {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid;
+        border-right: 2px solid;
+    }
+
+    .contact-section h2 {
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-size: 32px;
+        color: #5682a3;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+        text-shadow: 0 0 10px rgba(79, 125, 201, 0.3);
+        letter-spacing: 2px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .contact-section h2::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: -10px;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, #5682a3, transparent);
+    }
+
+    .contact-section p {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #d6d6d6;
+        margin-bottom: 20px;
+    }
+
+    /* Team Contact Cards */
+    .team-contact-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        width: 100%;
+        margin: 40px 0;
+    }
+
+    .team-contact-card {
+        background: rgba(17, 27, 33, 0.8);
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        border-radius: 12px;
+        padding: 30px 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .team-contact-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at top right, rgba(79, 125, 201, 0.1), transparent 70%);
+        z-index: 0;
+    }
+
+    .team-contact-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(79, 125, 201, 0.3);
+        border-color: #5682a3;
+    }
+
+    .contact-icon {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: #5682a3;
+        transition: all 0.5s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .team-contact-card:hover .contact-icon {
+        transform: scale(1.2);
+        text-shadow: 0 0 20px rgba(79, 125, 201, 0.8);
+    }
+
+    .team-contact-card h3 {
+        font-size: 1.4rem;
+        font-family: 'Orbitron', 'Segoe UI', sans-serif;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: white;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    .team-contact-card:hover h3 {
+        color: #5682a3;
+    }
+
+    .contact-info {
+        margin: 15px 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-info a {
+        color: #d6d6d6;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .contact-info a:hover {
+        color: #5682a3;
+        transform: translateY(-2px);
+    }
+
+    .contact-info a i {
+        margin-right: 8px;
+    }
+
+    /* Response Time Indicator */
+    .response-time {
+        display: block;  /* بدلاً من inline-block */
+        margin: 25px auto 0;  /* استخدام auto لليسار واليمين لتوسيطه */
+        padding: 10px 20px;
+        border-radius: 30px;
+        background: rgba(79, 125, 201, 0.1);
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        color: #d6d6d6;
+        font-size: 14px;
+        position: relative;
+        z-index: 1;
+        width: fit-content;  /* لضمان أن العرض يناسب المحتوى فقط */
+    }
+
+    .response-time i {
+        color: #5682a3;
+        margin-right: 8px;
+    }
+
+    /* Social Media Icons */
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #5682a3, #3a6d99);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        box-shadow: 0 0 10px rgba(79, 125, 201, 0.2);
+    }
+
+    .social-icon:hover {
+        transform: translateY(-5px) scale(1.1);
+        background: linear-gradient(135deg, #3a6d99, #5682a3);
+        box-shadow: 0 5px 15px rgba(79, 125, 201, 0.5);
+    }
+
+    /* Contact Form Styles */
+    .contact-form {
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid rgba(79, 125, 201, 0.3);
+        border-radius: 10px;
+        background: rgba(17, 27, 33, 0.6);
+        color: white;
+        font-family: 'Poppins', 'Segoe UI', sans-serif;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #5682a3;
+        box-shadow: 0 0 15px rgba(79, 125, 201, 0.3);
+        background: rgba(17, 27, 33, 0.8);
+    }
+
+    .form-control::placeholder {
+        color: #999;
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    select.form-control {
+        appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="%235682a3" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+        background-size: 20px;
+    }
+
+    .submit-btn {
+        padding: 15px 40px;
+        background: linear-gradient(135deg, #5682a3, #3a6d99);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(79, 125, 201, 0.3);
+    }
+
+    .submit-btn:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .submit-btn:hover:before {
+        left: 100%;
+    }
+
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #4a7499, #2c5277);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 25px rgba(79, 125, 201, 0.5);
+    }
+
+    /* Security Badge */
+    .security-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+        gap: 10px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        background: rgba(17, 27, 33, 0.6);
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        color: #d6d6d6;
+        font-size: 14px;
+    }
+
+    .security-badge i {
+        color: #5682a3;
+        font-size: 18px;
+    }
+
+    /* Custom Checkbox */
+    .custom-checkbox {
+        display: inline-flex;
+        align-items: center;
+        margin: 15px 0;
+        cursor: pointer;
+    }
+
+    .custom-checkbox input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .checkmark {
+        position: relative;
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        border-radius: 5px;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+        background: rgba(17, 27, 33, 0.6);
+    }
+
+    .custom-checkbox:hover input ~ .checkmark {
+        border-color: #5682a3;
+    }
+
+    .custom-checkbox input:checked ~ .checkmark {
+        background-color: #5682a3;
+        border-color: #5682a3;
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    .custom-checkbox input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Privacy Notice */
+    .privacy-notice {
+        margin-top: 30px;
+        padding: 15px;
+        border-radius: 10px;
+        background: rgba(79, 125, 201, 0.05);
+        border: 1px solid rgba(79, 125, 201, 0.2);
+        font-size: 14px;
+        color: #a0a0a0;
+        text-align: center;
+    }
+
+    .privacy-notice a {
+        color: #5682a3;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .privacy-notice a:hover {
+        color: #6b9fd7;
+        text-decoration: underline;
+    }
+
+    /* FAQ Section */
+    .faq-container {
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .faq-item {
+        margin-bottom: 15px;
+        border: 1px solid rgba(79, 125, 201, 0.3);
+        border-radius: 10px;
+        overflow: hidden;
+        background: rgba(17, 27, 33, 0.6);
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+        border-color: #5682a3;
+        box-shadow: 0 0 15px rgba(79, 125, 201, 0.2);
+    }
+
+    .faq-question {
+        padding: 15px 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+        color: #ffffff;
+        background: rgba(79, 125, 201, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+        background: rgba(79, 125, 201, 0.2);
+    }
+
+    .faq-question::after {
+        content: '+';
+        font-size: 20px;
+        color: #5682a3;
+        transition: all 0.3s ease;
+    }
+
+    .faq-question.active {
+        background: rgba(79, 125, 201, 0.15);
+    }
+
+    .faq-question.active::after {
+        content: '-';
+        transform: rotate(180deg);
+    }
+
+    .faq-answer {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        color: #d6d6d6;
+        line-height: 1.6;
+    }
+
+    .faq-answer.show {
+        padding: 20px;
+        max-height: 300px;
+    }
+
+    /* Floating particles */
+    .floating-particle {
+        position: absolute;
+        background-color: rgba(79, 125, 201, 0.2);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Animations */
+    @keyframes scan {
+        0% { top: 0%; }
+        100% { top: 100%; }
+    }
+
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+        0% { opacity: 0; transform: translate(-50%, 20px); }
+        100% { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    @keyframes scrollWheel {
+        0% { opacity: 1; top: 10px; }
+        100% { opacity: 0; top: 30px; }
+    }
+
+    @keyframes arrowDown {
+        0% { opacity: 0; transform: rotate(45deg) translate(-5px, -5px); }
+        50% { opacity: 1; }
+        100% { opacity: 0; transform: rotate(45deg) translate(5px, 5px); }
+    }
+
+    @keyframes textShine {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+        50% { transform: scale(1.05); border-color: rgba(79, 125, 201, 0.7); }
+        100% { transform: scale(1); border-color: rgba(79, 125, 201, 0.3); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1000px) {
+        .team-contact-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .logo-container {
+            flex-direction: column;
+        }
+        
+        .title-container {
+            margin-left: 0;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        #project-name {
+            font-size: 36px;
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            padding: 0 20px;
+        }
+        
+        .contact-section {
+            padding: 30px 20px;
+        }
+
+        .contact-section h2 {
+            font-size: 28px;
+        }
+
+        .team-contact-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #project-name {
+            font-size: 30px;
+        }
+        
+        .hero-subtitle {
+            font-size: 16px;
+        }
+        
+        .contact-section h2 {
+            font-size: 24px;
+        }
+
+        .contact-section p {
+            font-size: 14px;
+        }
+
+        .hero-cta, .submit-btn {
+            padding: 14px 28px;
+            font-size: 16px;
+        }
+    }
+
+    .info-circle-container {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(17, 27, 33, 0.7);
+        border: 2px solid rgba(79, 125, 201, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 15px;
+        animation: pulse 2.5s infinite ease-in-out;
+        box-shadow: 0 0 15px rgba(79, 125, 201, 0.3);
+    }
+
+    .info-circle-container i {
+        color: #5682a3;
+        font-size: 18px;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="cyber-grid"></div>
+    <div class="scanner-beam"></div>
+    <div class="hero-content">
+        <div class="hero-header">
+            <div class="logo-container">
+                <a href="{% url 'WelcomePage' %}">
+                    <img src="{% static 'images/Hawk_logo.jpg' %}" alt="Hawk Logo" class="logo-pulse">
+                </a>
+                <div class="title-container">
+                    <h1><a href="{% url 'WelcomePage' %}" id="project-name">Hawk Eye</a></h1>
+                    <div class="subtitle-line"></div>
+                    <p class="project-tagline">Open Source Intelligence</p>
+                </div>
+            </div>
+        </div>
+        <p class="hero-subtitle">Get In Touch With Our Team Of OSINT & Security Experts</p>
+        <a href="#contact-main" class="hero-cta">
+            <span>Contact Us Now</span>
+            <i class="fas fa-angle-down"></i>
+        </a>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <div class="arrow">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="info-circle-container">
+                <i class="fas fa-envelope-open-text"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="main-content" id="contact-main">
+    <div class="cyber-accent-top"></div>
+
+    <!-- Introduction -->
+    <div class="contact-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Get In Touch</h2>
+        <p style="text-align: center;">
+            Whether You Have Questions About Our Tools, Need Technical Support, Or Want To Discuss Collaboration Opportunities, We're Here To Help. Our Team Of Cybersecurity Students Is Ready To Assist You With Any Inquiries Related To Our OSINT Tools And Services.
+        </p>
+    </div>
+    
+    <!-- Team Contact Information -->
+    <div class="contact-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Reach Out To Our Team</h2>
+        <p style="text-align: center;">
+            Connect With The Hawk Eye Team Through Multiple Channels. Feel Free To Reach Out Via Email, Phone Or Social Media.
+        </p>
+        
+        <div class="team-contact-grid">
+            <!-- Email Contact -->
+            <div class="team-contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>Email Us</h3>
+                <div class="contact-info">
+                    <a href="mailto:yhyybdalrhym13@gmail.com">yhyybdalrhym13@gmail.com</a>
+                </div>
+                <div class="contact-info">
+                    <a href="mailto:hodaifa.haitham2003@gmail.com">hodaifa.haitham2003@gmail.com</a>
+                </div>
+            </div>
+            
+            <!-- Phone Contact -->
+            <div class="team-contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h3>Call Us</h3>
+                <div class="contact-info">
+                    <a href="tel:+962788964932"><i class="fas fa-phone"></i> +962 788964932</a>
+                </div>
+                <div class="contact-info">
+                    <a href="tel:+962781598094"><i class="fas fa-phone"></i> +962 781598094</a>
+                </div>
+                <div class="contact-info">
+                    <a href="tel:+962799286316"><i class="fas fa-phone"></i> +962 799286316</a>
+                </div>
+            </div>
+            
+            <!-- Social Media -->
+            <div class="team-contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <h3>Follow Us</h3>
+                <div class="contact-info">
+                    Connect With Us On Social Media
+                </div>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/yahya10___" class="social-icon" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://web.facebook.com/profile.php?id=61571760135547" class="social-icon" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com/Alkhateeb1H" class="social-icon" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/yahya-abd-al-raheem-592321317" class="social-icon" target="_blank">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://github.com/Yahya-AbdAlraheem" class="social-icon" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div style="width: 100%; text-align: center;">
+            <div class="response-time">
+                <i class="fas fa-clock"></i> We Typically Respond Within 24-48 Hours
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Form -->
+    <div class="contact-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Send Us A Message</h2>
+        <p style="text-align: center;">
+            Fill Out The Form Below And One Of Our Team Members Will Get Back To You As Soon As Possible.
+        </p>
+        
+        <form class="contact-form" method="post" action="{% url 'Contact' %}">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" name="email" class="form-control" placeholder="Your Email Address" required>
+            </div>
+            
+            <div class="form-group">
+                <select name="subject" class="form-control" required>
+                    <option value="" disabled selected>Select a Subject</option>
+                    <option value="General Inquiry">General Inquiry</option>
+                    <option value="Technical Support">Technical Support</option>
+                    <option value="Feature Request">Feature Request</option>
+                    <option value="Bug Report">Bug Report</option>
+                    <option value="Security Report">Security Vulnerability Report</option>
+                    <option value="Collaboration">Collaboration Opportunity</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <textarea name="message" class="form-control" placeholder="Your Message" required></textarea>
+            </div>
+            
+            <!-- Security Verification -->
+            <div class="form-group">
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    Human Verification: Please complete the CAPTCHA below
+                </div>
+                
+                <!-- Placeholder for CAPTCHA -->
+                <div id="captcha-container" style="margin: 20px 0; text-align: center;">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" id="human-verify" name="human-verify" required>
+                        <span class="checkmark"></span>
+                        I am not a robot
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group" style="text-align: center;">
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </div>
+            
+            <div class="privacy-notice">
+                By submitting this form, you agree to our <a href={% static 'pages/Privacy_Policy.html' %}>Privacy Policy</a>. Your information will be kept confidential and only used to respond to your inquiry.
+            </div>
+        </form>
+    </div>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    
+    <!-- FAQ Section -->
+    <div class="contact-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Frequently Asked Questions</h2>
+        <p style="text-align: center;">
+            Find Quick Answers To Common Questions About Our Services And Tools.
+        </p>
+        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">What is OSINT and how do your tools use it?</div>
+                <div class="faq-answer">
+                    OSINT stands for Open Source Intelligence. Our tools collect and analyze publicly available information from various sources including the dark web, Telegram channels, and domain registries to help you identify potential security threats and leaked information related to your digital footprint.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Are my searches and queries kept private?</div>
+                <div class="faq-answer">
+                    Yes, privacy is our priority. All searches conducted through our platform are securely processed, and we do not store any sensitive user data on our servers. Your searches are private and are not shared with third parties.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How does the Password Leaked Lookup service work?</div>
+                <div class="faq-answer">
+                    Our Password Leaked Lookup service securely compares the hash of your password against known breach databases like rockyou.txt without ever storing your actual password. This helps you determine if your password has been compromised in previous data breaches without exposing your credentials.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What should I do if I find my information has been leaked?</div>
+                <div class="faq-answer">
+                    If you discover your information has been compromised, we recommend immediately changing your passwords, enabling two-factor authentication where possible, monitoring your accounts for suspicious activity, and contacting the relevant services to secure your accounts. Feel free to contact us for more specific guidance.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I request a custom OSINT solution for my organization?</div>
+                <div class="faq-answer">
+                    Yes, we welcome collaboration opportunities and can discuss custom OSINT solutions tailored to your organization's specific needs. Please use our contact form and select "Collaboration" as the subject to start the conversation.
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Security Vulnerability Reporting -->
+    <div class="contact-section">
+        <div class="section-cyber-corner top-left"></div>
+        <div class="section-cyber-corner top-right"></div>
+        <div class="section-cyber-corner bottom-left"></div>
+        <div class="section-cyber-corner bottom-right"></div>
+        <h2>Report Security Vulnerabilities</h2>
+        <p style="text-align: center;">
+            We Take Security Seriously. If You've Discovered A Security Vulnerability In Our Tools Or Website, Please Let Us Know Responsibly.
+        </p>
+        <p style="text-align: center;">
+            For Security Issues, Please Select "Security Vulnerability Report" In The Contact Form Subject Field Or Email Us Directly At <a href="mailto:yhyybdalrhym13@gmail.com" style="color: #5682a3;">yhyybdalrhym13@gmail.com</a>
+        </p>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href={% static 'pages/Responsible_Disclosure_Policy.html' %} class="hero-cta">
+                <i class="fas fa-shield-alt"></i> Learn About Our Responsible Disclosure Policy
+            </a>
+        </div>
+    </div>
+    
+    <div class="cyber-accent-bottom"></div>
+</div>
+
+<!-- Matrix Rain Canvas -->
+<canvas id="matrix-rain" class="matrix-rain"></canvas>
+
+<script>
+    // Smooth scroll to sections when clicking navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Animation for elements when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.contact-section, .team-contact-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            observer.observe(el);
+        });
+        
+        // FAQ functionality
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const isActive = question.classList.contains('active');
+                
+                // Close all FAQs
+                document.querySelectorAll('.faq-question').forEach(q => {
+                    q.classList.remove('active');
+                    q.nextElementSibling.classList.remove('show');
+                });
+                
+                // If the clicked question wasn't active, open it
+                if (!isActive) {
+                    question.classList.add('active');
+                    answer.classList.add('show');
+                }
+            });
+        });
+
+        // Create floating particles
+        const heroSection = document.querySelector('.hero-section');
+        for (let i = 0; i < 30; i++) {
+            createParticle(heroSection);
+        }
+
+        // Add particles to main content as well
+        const mainContent = document.querySelector('.main-content');
+        for (let i = 0; i < 20; i++) {
+            createParticle(mainContent);
+        }
+        
+        // Matrix rain effect
+        const canvas = document.getElementById('matrix-rain');
+        const ctx = canvas.getContext('2d');
+        
+        // Make canvas full screen
+        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        
+        // Characters to display
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        const charArray = chars.split('');
+        
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        
+        // Array for drops - one per column
+        const drops = [];
+        
+        // Initialize drops
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        // Draw the matrix rain
+        function draw() {
+            // Set a semi-transparent black background to create fade effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Set text color to blue
+            ctx.fillStyle = '#5682a3';
+            ctx.font = fontSize + 'px monospace';
+            
+            // Loop through drops
+            for (let i = 0; i < drops.length; i++) {
+                // Get random character
+                const text = charArray[Math.floor(Math.random() * charArray.length)];
+                
+                // Draw the character
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                // If it's reached the bottom or with random chance, reset it
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                // Move the drop down
+                drops[i]++;
+            }
+        }
+        
+        // Setup animation
+        setInterval(draw, 35);
+        
+        // Resize canvas when window is resized
+        window.addEventListener('resize', function() {
+            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth;
+        });
+        
+        // =============================================
+        // FORM VALIDATION & CYBER ALERTS SYSTEM - START
+        // =============================================
+        
+        // Create and add styles for the cyber alerts
+        const cyberAlertStyles = document.createElement('style');
+        cyberAlertStyles.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            
+            .cyber-alert {
+                position: fixed;
+                top: 30px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-20px);
+                min-width: 300px;
+                max-width: 500px;
+                background: rgba(17, 27, 33, 0.95);
+                border: 1px solid #5682a3;
+                box-shadow: 0 0 25px rgba(79, 125, 201, 0.5);
+                border-radius: 8px;
+                padding: 20px;
+                z-index: 1000;
+                opacity: 0;
+                transition: all 0.5s ease;
+                backdrop-filter: blur(10px);
+                text-align: center;
+            }
+            
+            .cyber-alert.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+                animation: alertPulse 2s infinite;
+            }
+            
+            .cyber-alert-success {
+                border-color: #2ecc71;
+            }
+            
+            .cyber-alert-error {
+                border-color: #e74c3c;
+            }
+            
+            .cyber-alert::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: radial-gradient(circle at top right, rgba(79, 125, 201, 0.1), transparent 70%);
+                z-index: -1;
+                border-radius: 8px;
+            }
+            
+            .cyber-alert-icon {
+                font-size: 28px;
+                margin-bottom: 15px;
+                display: block;
+            }
+            
+            .success-icon {
+                color: #2ecc71;
+            }
+            
+            .error-icon {
+                color: #e74c3c;
+            }
+            
+            .cyber-alert-title {
+                font-family: 'Orbitron', 'Segoe UI', sans-serif;
+                font-size: 18px;
+                font-weight: 600;
+                color: white;
+                margin-bottom: 10px;
+            }
+            
+            .cyber-alert-message {
+                color: #d6d6d6;
+                margin-bottom: 15px;
+            }
+            
+            .cyber-alert-progress {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                height: 3px;
+                background: linear-gradient(to right, #5682a3, #3a6d99);
+                width: 100%;
+                animation: progressShrink 5s linear forwards;
+            }
+            
+            .cyber-alert-success .cyber-alert-progress {
+                background: linear-gradient(to right, #2ecc71, #27ae60);
+            }
+            
+            .cyber-alert-error .cyber-alert-progress {
+                background: linear-gradient(to right, #e74c3c, #c0392b);
+            }
+            
+            .cyber-alert-close {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                color: #5682a3;
+                background: none;
+                border: none;
+                font-size: 16px;
+                cursor: pointer;
+                padding: 5px;
+                transition: all 0.3s ease;
+            }
+            
+            .cyber-alert-close:hover {
+                color: white;
+                transform: scale(1.2);
+            }
+            
+            @keyframes alertPulse {
+                0% { box-shadow: 0 0 15px rgba(79, 125, 201, 0.5); }
+                50% { box-shadow: 0 0 25px rgba(79, 125, 201, 0.8); }
+                100% { box-shadow: 0 0 15px rgba(79, 125, 201, 0.5); }
+            }
+            
+            @keyframes progressShrink {
+                0% { width: 100%; }
+                100% { width: 0%; }
+            }
+            
+            .cyber-alert.fade-out {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            
+            /* Corner elements for the cyber look */
+            .alert-cyber-corner {
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                border-color: #5682a3;
+                z-index: 1;
+            }
+            
+            .alert-top-left {
+                top: 0;
+                left: 0;
+                border-top: 2px solid;
+                border-left: 2px solid;
+            }
+            
+            .alert-top-right {
+                top: 0;
+                right: 0;
+                border-top: 2px solid;
+                border-right: 2px solid;
+            }
+            
+            .alert-bottom-left {
+                bottom: 0;
+                left: 0;
+                border-bottom: 2px solid;
+                border-left: 2px solid;
+            }
+            
+            .alert-bottom-right {
+                bottom: 0;
+                right: 0;
+                border-bottom: 2px solid;
+                border-right: 2px solid;
+            }
+            
+            .cyber-alert-success .alert-cyber-corner {
+                border-color: #2ecc71;
+            }
+            
+            .cyber-alert-error .alert-cyber-corner {
+                border-color: #e74c3c;
+            }
+        `;
+        document.head.appendChild(cyberAlertStyles);
+        
+        // Function to show cyber alerts
+        function showCyberAlert(type, title, message, duration = 5000) {
+            console.log("Showing cyber alert:", type, title, message);
+            
+            // Remove any existing alerts
+            const existingAlert = document.querySelector('.cyber-alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+            
+            // Create alert element
+            const alert = document.createElement('div');
+            alert.className = `cyber-alert cyber-alert-${type}`;
+            
+            // Add cyber corners
+            const corners = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+            corners.forEach(corner => {
+                const cornerEl = document.createElement('div');
+                cornerEl.className = `alert-cyber-corner alert-${corner}`;
+                alert.appendChild(cornerEl);
+            });
+            
+            // Add content
+            alert.innerHTML += `
+                <span class="cyber-alert-icon ${type === 'success' ? 'fas fa-check-circle success-icon' : 'fas fa-exclamation-triangle error-icon'}"></span>
+                <div class="cyber-alert-title">${title}</div>
+                <div class="cyber-alert-message">${message}</div>
+                <button class="cyber-alert-close"><i class="fas fa-times"></i></button>
+                <div class="cyber-alert-progress"></div>
+            `;
+            
+            // Add to the DOM
+            document.body.appendChild(alert);
+            
+            // Show the alert
+            setTimeout(() => {
+                alert.classList.add('show');
+            }, 10);
+            
+            // Add close button functionality
+            const closeBtn = alert.querySelector('.cyber-alert-close');
+            closeBtn.addEventListener('click', () => {
+                closeAlert(alert);
+            });
+            
+            // Auto close after duration
+            setTimeout(() => {
+                closeAlert(alert);
+            }, duration);
+        }
+        
+        function closeAlert(alert) {
+            alert.classList.add('fade-out');
+            setTimeout(() => {
+                alert.remove();
+            }, 500);
+        }
+        
+        // Form validation handling - direct approach
+        const contactForm = document.querySelector('.contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                // Prevent form submission
+                e.preventDefault();
+                
+                console.log("Form submission intercepted");
+                
+                const humanVerify = document.getElementById('human-verify');
+                const nameField = document.querySelector('input[name="name"]');
+                const emailField = document.querySelector('input[name="email"]');
+                const subjectField = document.querySelector('select[name="subject"]');
+                const messageField = document.querySelector('textarea[name="message"]');
+                
+                // Check if robot verification is checked
+                if (!humanVerify.checked) {
+                    console.log("Robot verification not checked");
+                    
+                    // Show cyber alert for robot verification error
+                    showCyberAlert('error', 'Verification Required', 'Please verify you are human by checking the box.');
+                    
+                    // Add shake animation to checkbox
+                    const checkboxContainer = document.querySelector('.custom-checkbox');
+                    checkboxContainer.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        checkboxContainer.style.animation = '';
+                    }, 500);
+                    
+                    return false;
+                }
+                
+                // Check other required fields
+                if (!nameField.value || !emailField.value || !subjectField.value || !messageField.value) {
+                    console.log("Missing required fields");
+                    showCyberAlert('error', 'Missing Information', 'Please fill in all required fields.');
+                    return false;
+                }
+                
+                console.log("Form validation passed, submitting form");
+                
+                // If all validations pass, submit the form
+                contactForm.submit();
+            });
+        }
+        
+        // Handle Django messages and transform them into cyber alerts
+        const djangoMessages = document.querySelector('.messages');
+        if (djangoMessages) {
+            // Get the message content and type
+            const messageElements = djangoMessages.querySelectorAll('li');
+            messageElements.forEach(message => {
+                let type = 'success';
+                if (message.classList.contains('error')) {
+                    type = 'error';
+                }
+                
+                // Show the styled alert
+                showCyberAlert(
+                    type, 
+                    type === 'success' ? 'Success' : 'Error', 
+                    message.textContent
+                );
+            });
+            
+            // Remove the original Django messages
+            djangoMessages.remove();
+        }
+        
+        // Also handle the custom error message
+        const errorElement = document.querySelector('p[style="color: red;"]');
+        if (errorElement) {
+            showCyberAlert('error', 'Error', errorElement.textContent);
+            errorElement.remove();
+        }
+        
+        // ===========================================
+        // FORM VALIDATION & CYBER ALERTS SYSTEM - END
+        // ===========================================
+    });
+
+    // Function to create floating particles
+    function createParticle(parent) {
+        const particle = document.createElement('div');
+        particle.classList.add('floating-particle');
+        
+        const size = Math.random() * 5 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        
+        const duration = Math.random() * 20 + 10;
+        particle.style.animation = `floatAnimation ${duration}s infinite ease-in-out`;
+        
+        // Create custom keyframe animation for each particle
+        const keyframes = `
+            @keyframes floatAnimation {
+                0% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.2}; }
+                25% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.1}; }
+                50% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.3}; }
+                75% { transform: translate(${Math.random() * 50 - 25}px, ${Math.random() * 50 - 25}px); opacity: ${Math.random() * 0.5 + 0.1}; }
+                100% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.2}; }
+            }
+        `;
+        
+        const style = document.createElement('style');
+        style.innerHTML = keyframes;
+        document.head.appendChild(style);
+        
+        parent.appendChild(particle);
+    }
+</script>
+{% endblock %}
